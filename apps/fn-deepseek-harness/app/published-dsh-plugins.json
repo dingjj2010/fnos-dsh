@@ -6,11 +6,5 @@
       "name": "@dicjun/dsh-fnos",
       "version": "0.1.7-rc.2"
     }
-  ],
-  "bundled": [
-    {
-      "name": "dshmarket",
-      "version": "1.46.1"
-    }
   ]
 }

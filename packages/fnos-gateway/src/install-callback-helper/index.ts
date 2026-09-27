@@ -2,7 +2,6 @@
 
 import { Command, CommanderError } from 'commander'
 import {
-  bundledPluginVersion,
   packageField,
   persistPnpmStoreDir,
   profileDependencyVersion,
@@ -63,13 +62,6 @@ export function createProgram(): Command {
     .description('Print published plugins as tab-separated name and version rows')
     .argument('<manifest-path>')
     .action(publishedPlugins)
-
-  program
-    .command('bundled-plugin-version')
-    .description('Read a bundled plugin version from the plugin manifest')
-    .argument('<manifest-path>')
-    .argument('<package-name>')
-    .action(bundledPluginVersion)
 
   program
     .command('prepare-node-pty')

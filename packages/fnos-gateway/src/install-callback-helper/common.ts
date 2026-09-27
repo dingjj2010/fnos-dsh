@@ -136,10 +136,3 @@ export async function publishedPlugins(path: string): Promise<void> {
     }
   }
 }
-
-export async function bundledPluginVersion(path: string, packageName: string): Promise<void> {
-  const manifest = await readJsonStrict(path)
-  const bundled = Array.isArray(manifest.bundled) ? manifest.bundled as PluginManifestEntry[] : []
-  const plugin = bundled.find(value => value.name === packageName)
-  if (typeof plugin?.version === 'string') process.stdout.write(plugin.version)
-}

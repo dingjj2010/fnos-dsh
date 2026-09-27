@@ -221,17 +221,6 @@ install_published_dsh_plugins() {
             log_info "Keeping installed ${plugin_name}@${current_version}; exact version already matches."
         fi
     done < <(run_install_callback_helper published-plugins "${DSH_PUBLISHED_PLUGIN_MANIFEST}")
-
-    local dshmarket_version
-    dshmarket_version="$(installed_plugin_version dshmarket)"
-    if [ -n "${dshmarket_version}" ]; then
-        log_info "Keeping installed dshmarket@${dshmarket_version}; the third-party plugin is install-once and non-destructive."
-    else
-        dshmarket_version="$(run_install_callback_helper bundled-plugin-version "${DSH_PUBLISHED_PLUGIN_MANIFEST}" dshmarket)"
-        [ -n "${dshmarket_version}" ] || fail_install "dshmarket is missing from the plugin manifest"
-        run_dsh_plugin add "dshmarket@${dshmarket_version}" ||
-            fail_install "Unable to install dshmarket@${dshmarket_version} with the dsh CLI"
-    fi
 }
 
 patch_dsh_attachment_local() {

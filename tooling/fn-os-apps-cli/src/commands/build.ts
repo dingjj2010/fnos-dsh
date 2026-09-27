@@ -18,7 +18,6 @@ const DSH_PUBLISHED_PLUGIN_MANIFEST = 'app/published-dsh-plugins.json'
 const DSH_BUNDLED_PLUGIN_DIRECTORY = 'app/bundled-dsh-plugins'
 const DSH_VERSION = '0.1.7-rc.2'
 const PNPM_VERSION = '11.7.0'
-const DSHMARKET_VERSION = '1.46.1'
 const DSH_NATIVE_CONFIG = '.github/config/dsh-native-0.1.7-rc.2.env'
 const DSH_NATIVE_PREP_SCRIPT = '.github/scripts/prepare-dsh-native.sh'
 const DSH_NATIVE_BUNDLE_DIRECTORY = 'app/native/node-pty'
@@ -26,7 +25,6 @@ const DSH_NATIVE_VERSION_FILES = ['app/dsh-version', 'app/node-pty-versions'] as
 
 type PublishedDshPluginManifest = {
   plugins?: Array<{ name?: unknown, version?: unknown }>
-  bundled?: Array<{ name?: unknown, version?: unknown }>
 }
 
 function dshPublishedPluginManifestPath(app: FpkApp): string {
@@ -93,10 +91,6 @@ async function validateDshReleaseInputs(app: FpkApp): Promise<void> {
         plugin.version.length === 0 || !/^[0-9A-Za-z][0-9A-Za-z.+-]*$/u.test(plugin.version)) {
       throw new Error(`Published DSH plugin must use an exact version at ${manifestPath} (index ${index})`)
     }
-  }
-  const dshmarket = manifest.bundled?.find(plugin => plugin?.name === 'dshmarket')
-  if (dshmarket?.version !== DSHMARKET_VERSION) {
-    throw new Error(`The published DSH plugin manifest must pin dshmarket@${DSHMARKET_VERSION}`)
   }
   const callback = await readFile(join(repositoryRoot, 'apps', app.name, 'cmd/install_callback'), 'utf8')
   if (!callback.includes(`DSH_VERSION="${DSH_VERSION}"`) || !callback.includes(`PNPM_VERSION="${PNPM_VERSION}"`)) {
