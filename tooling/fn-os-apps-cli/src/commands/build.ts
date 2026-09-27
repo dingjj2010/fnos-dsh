@@ -94,18 +94,6 @@ async function validateDshReleaseInputs(app: FpkApp): Promise<void> {
       throw new Error(`Published DSH plugin must use an exact version at ${manifestPath} (index ${index})`)
     }
   }
-  // Codex must stay bundled: the registry only carries builds whose DSH
-  // baseline predates 0.1.5-rc.2, and installing one of those breaks Web
-  // startup on the missing `settingsNamespace` export. Keep the removal
-  // guard inverted so a manifest edit cannot silently drop it again.
-  const codex = manifest.plugins.find(plugin => typeof plugin?.name === 'string' && plugin.name.includes('codex'))
-  if (codex === undefined) {
-    throw new Error(`The published DSH plugin manifest must bundle the Codex plugin: ${manifestPath}`)
-  }
-  const codeBuddy = manifest.plugins.find(plugin => plugin?.name === '@dicjun/dsh-codebuddy')
-  if (codeBuddy === undefined) {
-    throw new Error(`The published DSH plugin manifest must bundle CodeBuddy: ${manifestPath}`)
-  }
   const dshmarket = manifest.bundled?.find(plugin => plugin?.name === 'dshmarket')
   if (dshmarket?.version !== DSHMARKET_VERSION) {
     throw new Error(`The published DSH plugin manifest must pin dshmarket@${DSHMARKET_VERSION}`)

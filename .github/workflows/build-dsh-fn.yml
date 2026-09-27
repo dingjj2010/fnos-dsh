@@ -40,10 +40,9 @@ jobs:
         with:
           version: 11.16.0
 
-      # 只需要网关和 CLI：FPK 不再内置插件，因此不构建插件包，也不装它们的
-      # workspace 依赖 `@tnnevol/dsh-semi-ui`。
+      # 安装网关、CLI 以及需要打包进 FPK 的 DSH 插件（@dicjun/dsh-fnos）。
       - name: Install repository build dependencies
-        run: pnpm install --filter @tnnevol/fnos-gateway... --filter @tnnevol/fn-os-apps-cli --frozen-lockfile
+        run: pnpm install --filter @tnnevol/fnos-gateway... --filter @tnnevol/fn-os-apps-cli --filter @dicjun/dsh-fnos... --frozen-lockfile
 
       - name: Install fnpack
         run: |
@@ -52,13 +51,13 @@ jobs:
           sudo mv fnpack /usr/local/bin/fnpack
           fnpack --help
 
-      # 只编译 DSH 应用本身，不把仓库内的 DSH 插件打进 FPK。插件由用户在应用内
-      # 通过 `dsh plugin` 从 npm 安装，FPK 不再随包分发插件归档。
+      # 将 @dicjun/dsh-fnos 打包为 tgz 内置到 FPK 中，安装时从本地归档加载，
+      # 不走 npm registry。
       #
       # `--bundle-dsh-native` 会在 FPK 构建流程中准备并内置 node-pty native 文件；
-      # `--skip-bundle-dsh-plugins` 禁止进入插件内置询问，保证 CI 非交互执行。
+      # `--bundle-dsh-plugins` 将 manifest 中的插件归档打包进 FPK。
       - name: Build fn-deepseek-harness FPK
-        run: pnpm run build -- --fpk --app fn-deepseek-harness --bundle-dsh-native --skip-bundle-dsh-plugins
+        run: pnpm run build -- --fpk --app fn-deepseek-harness --bundle-dsh-native --bundle-dsh-plugins
 
       - name: Rename FPK with DSH version
         id: rename
