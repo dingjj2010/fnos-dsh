@@ -4,7 +4,7 @@ import { readJsonStrict } from './common.ts'
 import { createLogger, fail } from './logger.ts'
 
 const logger = createLogger('dsh-attachment-local-patch')
-const PATCH_MARKER = 'fnOS patch: attachment-local uses TRIM_PKGVAR boundary v1'
+const PATCH_MARKER = 'fnOS patch: attachment-local uses TRIM_PKGVAR boundary v2'
 
 function replaceOnce(source: string, before: string, after: string, label: string): string {
   const count = source.split(before).length - 1
@@ -77,10 +77,10 @@ async function ensureDurableHome(path) {
   )
   source = replaceOnce(
     source,
-    'this.root = resolve(join(resolveDshHome(config.dshHome), "attachments", "v1"));',
+    'const dshHome = resolveDshHome(config.dshHome);',
     `/* ${PATCH_MARKER} */
 \tconst attachmentHome = process.env.TRIM_PKGVAR || config.dshHome
-\tthis.root = resolve(join(resolveDshHome(attachmentHome), "attachments", "v1"));`,
+\tconst dshHome = resolveDshHome(attachmentHome)`,
     'attachment root',
   )
 
