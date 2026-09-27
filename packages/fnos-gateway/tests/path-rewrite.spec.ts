@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addGatewayPrefix, normalizePrefix, rewriteLocation, rewritePath } from '../src/middleware/path-rewrite.ts'
+import { addGatewayPrefix, canonicalPrefixTarget, normalizePrefix, rewriteLocation, rewritePath } from '../src/middleware/path-rewrite.ts'
 
 describe('gateway path rewriting', () => {
   it('FNOS-002-TP-032-TC-001: normalizes the public gateway prefix once', () => {
@@ -14,6 +14,17 @@ describe('gateway path rewriting', () => {
     expect(rewritePath('/app/fn-deepseek-harness', '/app/fn-deepseek-harness')).toBe('/')
     expect(rewritePath('/app/fn-deepseek-harness-other/file', '/app/fn-deepseek-harness'))
       .toBe('/app/fn-deepseek-harness-other/file')
+  })
+
+  it('FNOS-002-TP-032-TC-001: canonicalizes the bare prefix so a relative Location stays inside the app', () => {
+    const prefix = '/app/fn-deepseek-harness'
+    expect(canonicalPrefixTarget(prefix, 'GET', prefix)).toBe(prefix + '/')
+    expect(canonicalPrefixTarget(prefix + '?token=abc', 'GET', prefix)).toBe(prefix + '/?token=abc')
+    expect(canonicalPrefixTarget(prefix + '/', 'GET', prefix)).toBeUndefined()
+    expect(canonicalPrefixTarget(prefix + '/api/status', 'GET', prefix)).toBeUndefined()
+    expect(canonicalPrefixTarget(prefix + '-other', 'GET', prefix)).toBeUndefined()
+    expect(canonicalPrefixTarget(prefix, 'POST', prefix)).toBeUndefined()
+    expect(canonicalPrefixTarget(prefix, 'GET', '')).toBeUndefined()
   })
 
   it('FNOS-002-TP-032-TC-002: prefixes root-relative resources without double-prefixing them', () => {

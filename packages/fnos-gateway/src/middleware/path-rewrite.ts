@@ -1,4 +1,4 @@
-import type { IncomingMessage } from 'node:http'
+import type { IncomingMessage, ServerResponse } from 'node:http'
 
 export function normalizePrefix(value: string): string {
   const prefix = String(value || '').trim()
@@ -37,8 +37,28 @@ export function rewriteLocation(value: unknown, gatewayPrefix: string): unknown 
   return value.startsWith('/') && !value.startsWith('//') ? addGatewayPrefix(value, gatewayPrefix) : value
 }
 
+/**
+ * Redirect the bare gateway prefix to its directory form.
+ *
+ * DSH answers a tokenized index request with the relative `Location: ./`, so a
+ * document URL that lacks the trailing slash resolves it against the *parent*
+ * directory and the browser leaves the app. Canonicalizing the entry once makes
+ * every relative redirect resolve inside the prefix.
+ */
+export function canonicalPrefixTarget(rawUrl: string | undefined, method: string | undefined, gatewayPrefix: string): string | undefined {
+  if (gatewayPrefix === '' || method !== 'GET' || rawUrl === undefined || rawUrl === '' || rawUrl === '*') return undefined
+  const path = rawUrl.split('?', 1)[0] ?? ''
+  return path === gatewayPrefix ? gatewayPrefix + '/' + rawUrl.slice(path.length) : undefined
+}
+
 export function pathRewriteMiddleware(gatewayPrefix: string) {
-  return (req: IncomingMessage, _res: unknown, next: () => void): void => {
+  return (req: IncomingMessage, res: ServerResponse, next: () => void): void => {
+    const canonical = canonicalPrefixTarget(req.url, req.method, gatewayPrefix)
+    if (canonical !== undefined) {
+      res.writeHead(308, { location: canonical })
+      res.end()
+      return
+    }
     if (req.url) {
       req.url = rewritePath(req.url, gatewayPrefix)
     }

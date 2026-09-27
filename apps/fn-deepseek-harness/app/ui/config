@@ -7,7 +7,7 @@
             "protocol": "",
             "gatewayPrefix": "/app/fn-deepseek-harness",
             "gatewaySocket": "app.sock",
-            "url": "/app/fn-deepseek-harness",
+            "url": "/app/fn-deepseek-harness/",
             "allUsers": false,
             "control": {
                 "accessPerm": "editable"

@@ -431,4 +431,51 @@ describe('gateway server', () => {
     expect(response.headers['content-type']).toBe('text/html; charset=utf-8')
     expect(response.body).toContain('DSH Web 未运行')
   })
+
+  it('redirects the bare gateway prefix to the directory form a relative Location can resolve against', async () => {
+    const upstream = createServer((_req, res) => {
+      // DSH mints its cookie from the tokenized index and answers with the
+      // relative `./`. A document URL without the trailing slash resolves that
+      // against the parent directory, so the browser leaves the app entirely.
+      res.writeHead(303, { 'cache-control': 'no-store', location: './' })
+      res.end()
+    })
+    const upstreamPort = await listen(upstream)
+    resources.push(async () => new Promise<void>(resolve => upstream.close(() => resolve())))
+
+    const directory = await mkdtemp(join(tmpdir(), 'fnos-gateway-'))
+    const gatewaySocket = join(directory, 'gateway.sock')
+    const gateway = createGateway({
+      socketPath: gatewaySocket,
+      gatewayPrefix: GATEWAY_PREFIX,
+      upstreamHost: '127.0.0.1',
+      upstreamPort,
+      webProcess: {
+        getLaunchToken: () => 'launch-token',
+        snapshot: async () => ({ state: 'running' as const, pid: process.pid }),
+        start: async () => ({ state: 'running' as const, pid: process.pid }),
+        restart: async () => ({ state: 'running' as const, pid: process.pid }),
+        stop: async () => undefined,
+      } as never,
+    })
+    await once(gateway.server, 'listening')
+    resources.push(async () => gateway.close())
+    resources.push(async () => rm(directory, { recursive: true, force: true }))
+
+    const request = (path: string) => new Promise<{ statusCode: number | undefined, location: string | undefined }>((resolve, reject) => {
+      const req = httpRequest({ socketPath: gatewaySocket, path, method: 'GET' }, res => {
+        res.resume()
+        res.on('end', () => resolve({ statusCode: res.statusCode, location: res.headers.location }))
+        res.on('error', reject)
+      })
+      req.on('error', reject)
+      req.end()
+    })
+
+    // The redirect must happen before the request reaches DSH, otherwise the
+    // upstream mints a cookie the canonical URL then has to re-establish.
+    await expect(request(GATEWAY_PREFIX)).resolves.toEqual({ statusCode: 308, location: `${GATEWAY_PREFIX}/` })
+    // The canonical form keeps the relative Location inside the app.
+    await expect(request(`${GATEWAY_PREFIX}/`)).resolves.toEqual({ statusCode: 303, location: './' })
+  })
 })
