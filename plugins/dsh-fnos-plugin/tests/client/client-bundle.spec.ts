@@ -43,8 +43,8 @@ describe('dsh-fnos client artifact', () => {
     expect(pluginSource).not.toContain('setInterval')
     expect(pluginSource).not.toContain('visibilitychange')
     const primitives = {
-      IconBrowseOutline16: () => null,
-      IconFolderOpen16: () => null,
+      IconBrowseOutlineMedium: () => null,
+      IconFolderOpenMedium: () => null,
     }
     const jsxRuntime = { jsx: () => null, jsxs: () => null, Fragment: Symbol('Fragment') }
     const exports = handoff?.factory(specifier => {

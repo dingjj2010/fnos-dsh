@@ -2,14 +2,13 @@
  * 把 harness 消息序列化为 CodeBuddy（OpenAI 兼容）聊天请求。
  *
  * 用户文本被拼接，assistant 文本成为 `content`，工具调用成为 `tool_calls`，
- * 每个工具结果各自成为一条 `role: 'tool'` 消息——harness 把工具结果装在 user
- * 消息里，而这条线缆路由不接受那种形式。
+ * 每个工具结果消息（`role: 'tool'`）各自成为一条 `role: 'tool'` 线缆消息。
  *
  * @module dsh-codebuddy/serialize
  */
 
 import { contentHasImage, LlmError } from '@deepseek-ai/dsh-llm'
-import type { ContentBlock, GenerateOptions, Message } from '@deepseek-ai/dsh-llm'
+import type { ContentBlock, GenerateOptions, RequestMessage } from '@deepseek-ai/dsh-llm'
 import type { WireMessage, WireRequest, WireTool } from './types.ts'
 
 /** 拼接一条消息的文本块。 */
@@ -62,7 +61,7 @@ function assertSupportedContent(blocks: readonly ContentBlock[], supportsImages:
 }
 
 /** 序列化一条 assistant 回合：文本、重放的推理与工具调用。 */
-function serializeAssistant(message: Message): WireMessage {
+function serializeAssistant(message: RequestMessage): WireMessage {
   const text = flattenText(message.content)
   const reasoning = message.content
     .filter(block => block.type === 'reasoning')
@@ -95,7 +94,7 @@ function serializeAssistant(message: Message): WireMessage {
  * @returns 线缆消息；每个工具结果各自展开成一条独立条目。
  */
 export function serializeMessages(
-  messages: readonly Message[],
+  messages: readonly RequestMessage[],
   supportsImages: boolean,
 ): WireMessage[] {
   const wire: WireMessage[] = []
@@ -109,19 +108,15 @@ export function serializeMessages(
       wire.push(serializeAssistant(message))
       continue
     }
-    const toolResults = message.content.filter(block => block.type === 'tool-result')
-    const text = flattenText(message.content)
-    if (text.length > 0 || toolResults.length === 0) {
-      wire.push({ role: 'user', content: text })
-    }
-    for (const result of toolResults) {
+    if (message.role === 'tool') {
       wire.push({
         role: 'tool',
-        tool_call_id: boundToolCallId(result.toolCallId as unknown as string),
-        // 空输出在线缆上也需要一些内容。
-        content: flattenText(result.content) || '(no output)',
+        tool_call_id: boundToolCallId(message.toolCallId as unknown as string),
+        content: flattenText(message.content) || '(no output)',
       })
+      continue
     }
+    wire.push({ role: 'user', content: flattenText(message.content) })
   }
   return wire
 }

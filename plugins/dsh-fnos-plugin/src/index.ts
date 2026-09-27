@@ -2,6 +2,7 @@
 
 import type { Context } from '@deepseek-ai/cordis'
 import type {} from '@deepseek-ai/dsh-host-webserver'
+import type {} from '@deepseek-ai/dsh-settings'
 import z from '@deepseek-ai/schemastery'
 import { registerAuthorizedDirectoryRoutes } from './host/authorized-directories.ts'
 import { FNOS_AUTHORIZED_DIRECTORIES_SETTINGS_NAMESPACE } from './contracts/authorized-directories-contract.ts'
@@ -15,20 +16,19 @@ import { registerPresentedPathRoute } from './host/presented-open.ts'
 export const name = '@tnnevol/dsh-fnos'
 
 /** Settings back the fnOS card and the cached pre-plugin theme bootstrap. */
-export const FnosSettingsSchema = z.object({
+export const Config = z.object({
   [FNOS_SYSTEM_THEME_FIELD]: z.union(['light', 'dark']),
   [FNOS_GATEWAY_PROXY_PATHS_FIELD]: z.array(z.string()),
 })
 export const FNOS_AUTHORIZED_DIRECTORIES_SETTINGS_NS = FNOS_AUTHORIZED_DIRECTORIES_SETTINGS_NAMESPACE
 const DSH_THEME_SETTINGS_NS = 'ui-theme'
 
-/** Host services required to register the fnOS settings namespace and Web routes. */
+/** Host services required for Web routes and settings access. */
 export const inject = ['webServer', 'settings']
 
 export function apply(ctx: Context): void {
-  const settings = ctx.settings.register(FNOS_AUTHORIZED_DIRECTORIES_SETTINGS_NS, FnosSettingsSchema)
   registerAuthorizedDirectoryRoutes(ctx)
-  registerGatewayProxyRoutes(ctx, settings)
+  registerGatewayProxyRoutes(ctx)
   registerStaticAssetRoute(ctx)
   registerPresentedPathRoute(ctx)
   ctx.inject(['webServer'], httpCtx => {
@@ -43,15 +43,20 @@ export function apply(ctx: Context): void {
   })
 }
 
+function readSettingsValue(ctx: Context, ns: string): unknown {
+  const descriptor = ctx.settings.describe().find(entry => entry.ns === ns)
+  return descriptor?.value
+}
+
 function readDshThemePreference(ctx: Context): DshThemePreference {
-  const section = ctx.settings.get(DSH_THEME_SETTINGS_NS) as { preference?: unknown } | undefined
+  const section = readSettingsValue(ctx, DSH_THEME_SETTINGS_NS) as { preference?: unknown } | undefined
   return section?.preference === 'light' || section?.preference === 'dark' || section?.preference === 'system'
     ? section.preference
     : 'system'
 }
 
 function readCachedFnosTheme(ctx: Context): FnosTheme | null {
-  const section = ctx.settings.get(FNOS_AUTHORIZED_DIRECTORIES_SETTINGS_NS) as FnosSettings | undefined
+  const section = readSettingsValue(ctx, FNOS_AUTHORIZED_DIRECTORIES_SETTINGS_NS) as FnosSettings | undefined
   return isFnosTheme(section?.[FNOS_SYSTEM_THEME_FIELD]) ? section[FNOS_SYSTEM_THEME_FIELD] : null
 }
 

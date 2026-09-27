@@ -1,7 +1,7 @@
 /** Browser/Host contract for fnOS shared-directory management. */
 
 /** Settings namespace used to pair the Host namespace with the Client card. */
-export const FNOS_AUTHORIZED_DIRECTORIES_SETTINGS_NAMESPACE = 'dsh-fnos-authorized-directories'
+export const FNOS_AUTHORIZED_DIRECTORIES_SETTINGS_NAMESPACE = 'dsh-fnos'
 
 /** Same-origin route that lists the directories currently authorized for the app. */
 export const FNOS_AUTHORIZED_DIRECTORIES_PATH = '/plugins/dsh-fnos/authorized-directories'

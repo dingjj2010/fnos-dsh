@@ -53,7 +53,7 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
 }
 
 export const name = 'dsh-fnos-plugin-client'
-export const inject = ['theme', 'slots', 'locale', 'sessions', 'inputTriggers', 'commandUi', 'remote', 'remote.session', 'settingsScope', 'sessionLogDownload']
+export const inject = ['theme', 'slots', 'locale', 'sessions', 'inputTriggers', 'commandUi', 'remote', 'remote.session', 'configForms', 'sessionLogDownload']
 
 type SessionLogDownloadState = {
   bySession: Record<string, { open: boolean, status: 'downloading' | 'success' | 'error', error: string | null } | undefined>
@@ -73,9 +73,7 @@ type SessionLogDownloadController = {
 export function apply(ctx: ClientContext): void {
   ctx.effect(() => installSemiDshTheme(), 'dsh-fnos: Semi DSH theme')
   const bridge = createThemeBridge()
-  const fnosSettings = ctx.settingsScope.bind<FnosSettings>({
-    namespace: FNOS_AUTHORIZED_DIRECTORIES_SETTINGS_NAMESPACE,
-  })
+  const fnosSettings = ctx.configForms.get<FnosSettings>(FNOS_AUTHORIZED_DIRECTORIES_SETTINGS_NAMESPACE)
   {
     const controller = createThemeController(ctx, bridge, createThemePersistence(fnosSettings))
 
@@ -178,11 +176,12 @@ export function apply(ctx: ClientContext): void {
       inject: () => ({ t }),
     }, FnosSettingsDocumentAction))
   }
-  ctx.slots.inject('settings.plugin.item', () => ctx.slots.register({
-    name: 'settings.plugin.item',
-    key: 'dsh-fnos-authorized-directories',
-    // Keep the fnOS card after DSH's built-in configurable plugin cards.
-    priority: 100,
+  ctx.slots.inject('settings.plugins.tab', () => ctx.slots.register({
+    name: 'settings.plugins.tab',
+    id: 'dsh-fnos-authorized-directories',
+    order: 100,
+    label: () => t('title'),
+    locale: namespace,
     inject: () => ({ t }),
   }, AuthorizedDirectoriesCard))
   ctx.slots.inject('sidebar.footer.action', () => ctx.slots.register({
