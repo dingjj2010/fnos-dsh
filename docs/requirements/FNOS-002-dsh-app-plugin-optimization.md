@@ -37,7 +37,7 @@ DSH 在 fnOS 中运行后，还有几处使用体验需要调整。Codex 登录�
 - 引入 Turbo 统一包任务编排；根 `package.json` 提供统一任务入口，`tooling/fn-os-apps-cli` 通过 `fn-apps-cli` CLI 暴露任务，全部使用 TypeScript 与 tsdown。
 - 通过 `@clack/prompts` 在版本、构建和启动时询问目标区域；构建支持多选 FPK 和文档，并自动处理 DSH 网关和插件的 dsh-semi-ui 依赖。共享包不作为顶层构建选项，只由依赖它的主包通过 Turbo 自动编译。
 - 通过 `changelogithub` 在项目 Tag 发布时生成 Release 日志，移除 workflow 内手写日志生成逻辑。
-- 优化 `@tnnevol/fn-os-apps-cli` 目录结构：由独立的 `program.ts` 暴露 Commander `program` 实例，各 `commands/*.ts` 模块注册命令并实现 `action`，`src/index.ts` 统一加载并解析命令。
+- 优化 `@dicjun/fn-os-apps-cli` 目录结构：由独立的 `program.ts` 暴露 Commander `program` 实例，各 `commands/*.ts` 模块注册命令并实现 `action`，`src/index.ts` 统一加载并解析命令。
 - 根目录通过唯一的 `start` 入口统一启动插件开发 watch 和 VitePress 文档开发服务，插件启动自动包含共享 UI 依赖。
 - 开发指南菜单覆盖 FPK 应用配置、生命周期、权限、用户向导、环境脚本、任务编排和 GitHub 工作流；以流程图和依赖关系图说明根 `package.json`、入口 CLI、Turbo、workspace package 与 CI 工作流之间的调用关系。
 
@@ -73,11 +73,11 @@ DSH 在 fnOS 中运行后，还有几处使用体验需要调整。Codex 登录�
 
 - DSH 运行时、插件兼容性和 `@deepseek-ai/dsh-*` 依赖基线统一使用 `0.1.2-rc.1`；插件自身发布版本独立为 `0.1.2-rc.1.3`；`@earendil-works/pi-ai` 与 DSH `0.1.2-rc.1` 的锁定一致，使用 `0.84.2`。
 - FPK 安装/升级回调、node-pty native 配置、已发布插件清单和相关文档必须与该版本一致。
-- 当前已发布插件清单包含 `@tnnevol/dsh-codex-auth@0.1.2-rc.1.3` 与 `@tnnevol/dsh-fnos@0.1.2-rc.1.3`；插件的 `compatibility.json` 仍以 DSH `0.1.2-rc.1` 为兼容基线，后续插件发布必须同步更新该清单及 FPK 内置包。
+- 当前已发布插件清单包含 `@dicjun/dsh-codex-auth@0.1.2-rc.1.3` 与 `@dicjun/dsh-fnos@0.1.2-rc.1.3`；插件的 `compatibility.json` 仍以 DSH `0.1.2-rc.1` 为兼容基线，后续插件发布必须同步更新该清单及 FPK 内置包。
 - fnOS 插件客户端声明 `remote` 与 `remote.session` inject；任何访问 `ctx.remote.*` 命名空间的构建产物都必须携带对应 inject 声明，否则该插件视为损坏并需要重装。
 - 版本管理通过独立 `tooling/fn-os-apps-cli` workspace 中的 `bumpp` 执行；项目/FPK 版本命令只更新根项目、共享包和应用 Manifest 并创建项目 Tag，插件版本命令按指定插件独立更新并提交，不创建 Git Tag。
 - 版本检查和升级不得清理 `DSH_HOME`、profile、凭据、工作区或现有插件配置。
-- 构建任务由 Turbo 编排；插件构建先完成其 workspace 依赖（包括 `@tnnevol/dsh-semi-ui`），DSH FPK 构建先完成 fnOS Gateway，其他 FPK 不触发网关构建。
+- 构建任务由 Turbo 编排；插件构建先完成其 workspace 依赖（包括 `@dicjun/dsh-semi-ui`），DSH FPK 构建先完成 fnOS Gateway，其他 FPK 不触发网关构建。
 - 共享 UI 包继续由 workspace 管理，不作为 DSH 运行时插件重复安装。
 
 ## 交互和行为约束
@@ -94,7 +94,7 @@ DSH 在 fnOS 中运行后，还有几处使用体验需要调整。Codex 登录�
 - fnOS Tree 面板每次打开时记录已有引用作为操作基线；面板打开后新插入的引用属于本次操作，之前已存在的引用不自动映射为当前 Tree 选中状态。
 - 面板保持打开时，用户从输入框删除本次操作插入的 structured reference，Tree 必须同步取消对应节点；删除历史引用不得改变当前 Tree 状态。
 - 当前操作关联使用 DSH occurrence 身份区分，不只按路径判断。同一路径存在历史引用和本次引用时，只同步本次 occurrence。
-- Semi UI 总览插件使用 `@tnnevol/dsh-semi-ui` 的公开组件，并覆盖浅色和深色主题。
+- Semi UI 总览插件使用 `@dicjun/dsh-semi-ui` 的公开组件，并覆盖浅色和深色主题。
 - 设置中的插件卡片只保留总览入口；点击后进入 `#/plugins/semi-ui`。总览页面使用 DSH `shell.overlay` 插槽呈现，不覆盖 `conversation`、`sidebar` 等 single slot。
 - 总览路由支持浏览器前进、后退和刷新；关闭总览时返回进入前的 DSH 页面。未安装插件时该 Hash 不得影响 DSH 正常启动。
 - 网关源码放在 `packages/fnos-gateway`，使用 tsdown 将网关和安装辅助入口分别打包到 `apps/fn-deepseek-harness/app/gateway-proxy.mjs` 与 `apps/fn-deepseek-harness/app/scripts/install-callback-helper.mjs`；NAS 安装阶段不再安装网关的 npm 依赖。

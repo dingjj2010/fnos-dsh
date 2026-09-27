@@ -24,7 +24,7 @@ describe('dsh-codex-auth-plugin client artifact', () => {
     browserWindow.__ModuleLoader__ = { load: value => { handoff = value } }
     // The bundle is deliberately executed as a ModuleLoader registration script.
     new Function(source)()
-    expect(handoff?.id).toBe('@tnnevol/dsh-codex-auth')
+    expect(handoff?.id).toBe('@dicjun/dsh-codex-auth')
     const exports = handoff?.factory(specifier => {
       if (specifier === 'react') return React
       if (specifier === 'react-dom') return {}

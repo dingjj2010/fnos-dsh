@@ -13,7 +13,7 @@ import { registerStaticAssetRoute } from './host/static-assets.ts'
 import { registerPresentedPathRoute } from './host/presented-open.ts'
 
 /** Stable Host bundle name. */
-export const name = '@tnnevol/dsh-fnos'
+export const name = '@dicjun/dsh-fnos'
 
 /** Settings back the fnOS card and the cached pre-plugin theme bootstrap. */
 export const Config = z.object({

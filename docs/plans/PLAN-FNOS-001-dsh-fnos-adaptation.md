@@ -19,7 +19,7 @@ lastVerified: 2026-08-24
 
 ## 计划目标
 
-由 `fn-deepseek-harness` 提供 fnOS 应用边界，`@tnnevol/dsh-fnos` 和 `@tnnevol/dsh-codex-auth` 提供插件能力。适配代码不进入 DSH 官方仓库，用户配置、会话和授权数据在安装、升级与回滚时保持不变。
+由 `fn-deepseek-harness` 提供 fnOS 应用边界，`@dicjun/dsh-fnos` 和 `@dicjun/dsh-codex-auth` 提供插件能力。适配代码不进入 DSH 官方仓库，用户配置、会话和授权数据在安装、升级与回滚时保持不变。
 
 P0 和 P1 已在真实 fnOS NAS 中完成验证。
 
@@ -44,9 +44,9 @@ fnOS 桌面
   └─ iframe
        └─ fn-deepseek-harness 网关
             └─ DSH Web profile
-                 ├─ @tnnevol/dsh-fnos Client
+                 ├─ @dicjun/dsh-fnos Client
                  │    └─ 同源插件路由 → Host → fnOS API
-                 └─ @tnnevol/dsh-codex-auth
+                 └─ @dicjun/dsh-codex-auth
 ```
 
 - 浏览器只处理界面和受控请求。
@@ -151,12 +151,12 @@ DSH 标题变化 → setTitle(document.title)
 ### 插件检查
 
 ```sh
-pnpm --filter @tnnevol/dsh-fnos run typecheck
-pnpm --filter @tnnevol/dsh-fnos run test
-pnpm --filter @tnnevol/dsh-fnos run build
-pnpm --filter @tnnevol/dsh-codex-auth run typecheck
-pnpm --filter @tnnevol/dsh-codex-auth run test
-pnpm --filter @tnnevol/dsh-codex-auth run build
+pnpm --filter @dicjun/dsh-fnos run typecheck
+pnpm --filter @dicjun/dsh-fnos run test
+pnpm --filter @dicjun/dsh-fnos run build
+pnpm --filter @dicjun/dsh-codex-auth run typecheck
+pnpm --filter @dicjun/dsh-codex-auth run test
+pnpm --filter @dicjun/dsh-codex-auth run build
 ```
 
 测试覆盖主题事件、无 SDK 降级、路径规范化、授权取消、工作区委托、NAS 引用、文件打开和插件生命周期恢复。

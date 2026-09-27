@@ -38,7 +38,7 @@
 
 ## Agent（智能体）插件目录
 
-`plugins/*` 是 Agent 插件的 pnpm workspace。通用插件默认使用 `agent-plugin-<name>` 命名；面向特定生态的插件可以保留生态名称，例如 `@tnnevol/dsh-codex-auth`。每个子目录可以维护插件源码、构建配置、测试和 Cordis bundle patch。面向用户的插件说明统一维护在 `docs/`，不再以 `plugins/*/README.md` 作为更新入口。
+`plugins/*` 是 Agent 插件的 pnpm workspace。通用插件默认使用 `agent-plugin-<name>` 命名；面向特定生态的插件可以保留生态名称，例如 `@dicjun/dsh-codex-auth`。每个子目录可以维护插件源码、构建配置、测试和 Cordis bundle patch。面向用户的插件说明统一维护在 `docs/`，不再以 `plugins/*/README.md` 作为更新入口。
 
 ### DSH 插槽注册注意事项
 

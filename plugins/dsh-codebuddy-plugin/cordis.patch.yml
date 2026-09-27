@@ -1,4 +1,4 @@
-# The @tnnevol/dsh-codebuddy bundle patch.
+# The @dicjun/dsh-codebuddy bundle patch.
 #
 # Applied as ONE insert after the in-box bundle layers, so this row lands on
 # top of them without touching any row they own. Registering a provider needs
@@ -20,4 +20,4 @@
 
 - insert:
     - id: dsh-codebuddy
-      name: '@tnnevol/dsh-codebuddy'
+      name: '@dicjun/dsh-codebuddy'

@@ -24,7 +24,7 @@ lastVerified: 2026-09-12
 - `FNOS-002-01`：统一 Codex 登录与用量状态；未登录时隐藏状态，登录后根据接口是否提供五小时窗口自动显示或隐藏对应额度；取得一次性授权码后由用户点击复制，等待授权时可取消。
 - 版本脚本与插件版本发布流程由 `tooling/fn-os-apps-cli` workspace 中的 `fn-apps-cli` CLI 负责；项目/FPK 使用 `bumpp`，插件直接更新选中插件并检查 `published-dsh-plugins.json` 同步版本；插件交互式版本提示支持 bumpp 风格的 `custom ...` 自定义版本输入；多选插件时一次性更新所有选中插件并只生成一条合并提交，插件不创建 Git Tag。
 - `FNOS-002-02`：修正 NAS 文件和目录引用的插入规则；TreeSelect 使用独立关系模式支持多个文件/目录（含父子路径）同时选择，并在面板打开期间让本次引用删除状态反向同步到勾选节点，历史引用不参与当前选择。
-- `FNOS-002-03`：新增 DSH Semi UI 总览插件，集中展示 `@tnnevol/dsh-semi-ui` 的公共组件、状态和浅色/深色主题效果。
+- `FNOS-002-03`：新增 DSH Semi UI 总览插件，集中展示 `@dicjun/dsh-semi-ui` 的公共组件、状态和浅色/深色主题效果。
 - `FNOS-002-05`：从 ChatGPT Codex 账号刷新动态模型目录和思考级别，并写入 DSH OpenAI Codex 路由配置。
 - `FNOS-002-04`：使用 `connect` 与 `http-proxy-middleware` 重写 fnOS 统一网关代理；由常驻网关承载 FPK 状态并在 Web 左侧菜单提供 DSH Web 重启入口；由 fnOS 插件管理三方插件 API URL 反代规则，并让已打开的 DSH 页面立即取得最新配置。
 - 跨功能版本约束：DSH 运行时和插件兼容性基线为 `0.1.2-rc.1`，当前项目版本为 `5.3.1`，插件自身发布版本为 `0.1.2-rc.1.3`；FPK/NAS 验收已由 FNOS-003 完成。
@@ -44,7 +44,7 @@ lastVerified: 2026-09-12
 | fnOS 插件 Host | `plugins/dsh-fnos-plugin/src/` | 扩展设置 schema，校验路径并原子生成白名单 JSON |
 | fnOS 插件 Client | `plugins/dsh-fnos-plugin/src/client/` | 修正 NAS 引用插入与 Tree 状态同步，并提供路径草稿编辑、保存和放弃交互 |
 | 共享 Semi UI | `packages/dsh-semi-ui` | 提供按需导出的 Semi 组件、图标和 DSH 主题映射 |
-| Semi UI 总览插件 | `plugins/dsh-semi-ui-showcase-plugin` | 提供设置入口、`#/plugins/semi-ui` 路由和组件总览页面；npm 包使用 `@tnnevol/dsh-semi-ui-showcase`，避免与共享包重名 |
+| Semi UI 总览插件 | `plugins/dsh-semi-ui-showcase-plugin` | 提供设置入口、`#/plugins/semi-ui` 路由和组件总览页面；npm 包使用 `@dicjun/dsh-semi-ui-showcase`，避免与共享包重名 |
 | Codex 状态 Host | `plugins/dsh-codex-auth-plugin/src/usage.ts`、认证路由 | 规范化登录状态与 Codex 用量窗口 |
 | Codex 状态 Client | `plugins/dsh-codex-auth-plugin/src/client/` | 只在已登录时显示状态，并根据接口响应显示五小时和每周用量 |
 | 版本与发布 | `plugins/*`、`apps/fn-deepseek-harness/cmd/install_callback`、`.github/config/`、`docs/` | 统一 DSH/插件版本契约、FPK 安装回调、node-pty native 配置、发布清单和文档 |
@@ -174,7 +174,7 @@ Socket 文件只创建在 `${TRIM_APPDEST}`。用户可变配置写入 `${TRIM_P
   :columns="4"
   :steps="[
     {
-      label: '@tnnevol/dsh-semi-ui',
+      label: '@dicjun/dsh-semi-ui',
       detail: '按需导出共享组件和图标',
       variant: 'primary'
     },
@@ -412,7 +412,7 @@ SSE 路由由网关自身处理，不转发到 DSH。它经过 fnOS 统一网关
 
 | 任务 ID | 对应功能 | 实现内容 | 状态 |
 | --- | --- | --- | --- |
-| PLAN-FNOS-002-T03-01 | FNOS-002-03 | 创建 `plugins/dsh-semi-ui-showcase-plugin`，npm 包名使用 `@tnnevol/dsh-semi-ui-showcase`，建立独立 Client 插件构建入口 | <Badge type="tip" text="已完成" /> |
+| PLAN-FNOS-002-T03-01 | FNOS-002-03 | 创建 `plugins/dsh-semi-ui-showcase-plugin`，npm 包名使用 `@dicjun/dsh-semi-ui-showcase`，建立独立 Client 插件构建入口 | <Badge type="tip" text="已完成" /> |
 | PLAN-FNOS-002-T03-02 | FNOS-002-03 | 在设置插件列表注册“DSH Semi UI”轻量入口卡片，只展示说明和“打开组件总览”按钮 | <Badge type="tip" text="已完成" /> |
 | PLAN-FNOS-002-T03-03 | FNOS-002-03 | 实现可清理的 Hash 路由控制器，识别 `#/plugins/semi-ui`，监听 `hashchange`、`popstate` 并接入浏览器历史记录 | <Badge type="tip" text="已完成" /> |
 | PLAN-FNOS-002-T03-04 | FNOS-002-03 | 在 `shell.overlay` list slot 注册路由页面；仅路由命中时挂载全屏总览，不占用 DSH single slot | <Badge type="tip" text="已完成" /> |
@@ -475,7 +475,7 @@ SSE 路由由网关自身处理，不转发到 DSH。它经过 fnOS 统一网关
 | PLAN-FNOS-002-TT-03 | 根目录仅暴露交互式 `build`；支持选择文档构建和复选 FPK，DSH FPK 自动先编译网关，插件通过 Turbo 自动先编译 `dsh-semi-ui`，共享包不进入顶层构建选择，移除 `fnos-gateway` 的 `build:fpk` | <Badge type="tip" text="已完成" /> |
 | PLAN-FNOS-002-TT-04 | 引入 `changelogithub`，由根 `release:notes` 任务生成 Tag 对应 Release 日志，移除 workflow 内手写 Release 日志生成 | <Badge type="tip" text="已完成" /> |
 | PLAN-FNOS-002-TT-05 | 由独立 `program.ts` 暴露 Commander 实例，各 `commands/*.ts` 模块注册命令并实现 `action`，`src/index.ts` 统一加载并解析；按 `commands/`、`config/`、`core/`、`ui/`、`sdd/` 拆分版本、构建、提示、进程和文档检查职责 | <Badge type="tip" text="已完成" /> |
-| PLAN-FNOS-002-TT-06 | 为 `@tnnevol/fn-os-apps-cli` 暴露 `fn-apps-cli` bin，根 `package.json` 的业务任务统一通过 `pnpm exec fn-apps-cli` 调用，workspace 更名为 `tooling/fn-os-apps-cli` | <Badge type="tip" text="已完成" /> |
+| PLAN-FNOS-002-TT-06 | 为 `@dicjun/fn-os-apps-cli` 暴露 `fn-apps-cli` bin，根 `package.json` 的业务任务统一通过 `pnpm exec fn-apps-cli` 调用，workspace 更名为 `tooling/fn-os-apps-cli` | <Badge type="tip" text="已完成" /> |
 | PLAN-FNOS-002-TT-07 | 增加唯一根 `start` 入口，交互选择插件 Turbo watch 或 VitePress 文档服务；插件启动自动包含共享 UI 依赖并保持持续监听 | <Badge type="tip" text="已完成" /> |
 | PLAN-FNOS-002-TT-08 | 将 SDD、文档、共享包和插件检查统一收敛到 `fn-apps-cli check`，支持交互选择和 `--sdd`、`--docs`、`--packages`、`--plugins`、`--all` 参数 | <Badge type="tip" text="已完成" /> |
 | PLAN-FNOS-002-TT-09 | 重构开发指南全部子菜单，补充应用开发配置说明、统一任务操作手册，以及 `package.json` 入口、CLI、Turbo、workspace package 和 GitHub 工作流的流程图与依赖关系图 | <Badge type="tip" text="已完成" /> |
@@ -539,7 +539,7 @@ SSE 路由由网关自身处理，不转发到 DSH。它经过 fnOS 统一网关
 - 左侧分类导航在窄屏下改为顶部横向分类，不新增独立滚动遮罩。
 - 内容区按组件分组，每组展示默认状态和需要人工触发的浮层状态。
 - Tooltip、Dropdown、Cascader、TreeSelect、Modal 等 Portal 组件必须在总览路由中验证主题 Token 和层级。
-- 总览插件只导入 `@tnnevol/dsh-semi-ui`；发现缺少组件时先扩展共享包，再回到总览插件使用。
+- 总览插件只导入 `@dicjun/dsh-semi-ui`；发现缺少组件时先扩展共享包，再回到总览插件使用。
 
 路由实现约束：
 
@@ -626,8 +626,8 @@ SSE 路由由网关自身处理，不转发到 DSH。它经过 fnOS 统一网关
 | 项目 | 约束 |
 | --- | --- |
 | 文件位置 | `${TRIM_PKGVAR}/gateway/path-allowlist.json` |
-| 写入方 | `@tnnevol/dsh-fnos` Host 插件 |
-| 读取方 | `@tnnevol/fnos-gateway` |
+| 写入方 | `@dicjun/dsh-fnos` Host 插件 |
+| 读取方 | `@dicjun/fnos-gateway` |
 | 持久化来源 | DSH fnOS 插件设置；插件启动时可补建缺失 JSON |
 | 文件写入 | 同目录临时文件、完整校验、原子 rename |
 | 文件监听 | 监听 `${TRIM_PKGVAR}/gateway` 目录，兼容原子替换文件 |
@@ -712,10 +712,10 @@ SSE 路由由网关自身处理，不转发到 DSH。它经过 fnOS 统一网关
 - 运行：
 
 ```bash
-pnpm --filter @tnnevol/fnos-gateway run typecheck
-pnpm --filter @tnnevol/fnos-gateway run test
-pnpm --filter @tnnevol/fnos-gateway run build
-pnpm --filter @tnnevol/fnos-gateway run build:app
+pnpm --filter @dicjun/fnos-gateway run typecheck
+pnpm --filter @dicjun/fnos-gateway run test
+pnpm --filter @dicjun/fnos-gateway run build
+pnpm --filter @dicjun/fnos-gateway run build:app
 ```
 
 构建后检查以下 FPK 产物：
@@ -736,9 +736,9 @@ pnpm --filter @tnnevol/fnos-gateway run build:app
 - 运行：
 
 ```bash
-pnpm --filter @tnnevol/dsh-fnos run typecheck
-pnpm --filter @tnnevol/dsh-fnos run test
-pnpm --filter @tnnevol/dsh-fnos run build
+pnpm --filter @dicjun/dsh-fnos run typecheck
+pnpm --filter @dicjun/dsh-fnos run test
+pnpm --filter @dicjun/dsh-fnos run build
 ```
 
 ### Semi UI 共享包与总览插件检查
@@ -751,25 +751,25 @@ pnpm --filter @tnnevol/dsh-fnos run build
 - 共享包先执行：
 
 ```bash
-pnpm --filter @tnnevol/dsh-semi-ui run typecheck
-pnpm --filter @tnnevol/dsh-semi-ui run test:unit
-pnpm --filter @tnnevol/dsh-semi-ui run build
+pnpm --filter @dicjun/dsh-semi-ui run typecheck
+pnpm --filter @dicjun/dsh-semi-ui run test:unit
+pnpm --filter @dicjun/dsh-semi-ui run build
 ```
 
 总览插件执行：
 
 ```bash
-pnpm --filter @tnnevol/dsh-semi-ui-showcase run typecheck
-pnpm --filter @tnnevol/dsh-semi-ui-showcase run test:unit
-pnpm --filter @tnnevol/dsh-semi-ui-showcase run build
+pnpm --filter @dicjun/dsh-semi-ui-showcase run typecheck
+pnpm --filter @dicjun/dsh-semi-ui-showcase run test:unit
+pnpm --filter @dicjun/dsh-semi-ui-showcase run build
 ```
 
 ### Codex 插件检查
 
 ```bash
-pnpm --filter @tnnevol/dsh-codex-auth run typecheck
-pnpm --filter @tnnevol/dsh-codex-auth run test
-pnpm --filter @tnnevol/dsh-codex-auth run build
+pnpm --filter @dicjun/dsh-codex-auth run typecheck
+pnpm --filter @dicjun/dsh-codex-auth run test
+pnpm --filter @dicjun/dsh-codex-auth run build
 ```
 
 测试至少覆盖未登录、登录、退出、鉴权失败，以及五小时窗口位于 primary、位于 secondary、只有每周窗口、缺少时长和接口失败；授权码复制覆盖点击成功与失败提示，取消覆盖点按钮与「取消不删除已保存凭据」，并覆盖「授权窗口自行关闭不影响登录」。
@@ -822,7 +822,7 @@ CodeBuddy 插件的检查命令与测试覆盖要求已迁入 [PLAN-FNOS-003](/p
 
 | 日期 | 变更 | 说明 |
 | --- | --- | --- |
-| 2026-09-04 | 版本统一目标从 `0.1.2-alpha.4` 调整为 `0.1.2-rc.1`：pi-ai 对齐 `0.84.2`；FPK 回调、native 配置与 CI 同步；发布清单补入 `@tnnevol/dsh-fnos` 并按精确版本固定安装（codex-auth `0.1.2-rc.1`、fnos `0.1.2-rc.1.1`）；确认 fnos 插件 `remote.session` inject 修复（TV-05～TV-08）。 |
+| 2026-09-04 | 版本统一目标从 `0.1.2-alpha.4` 调整为 `0.1.2-rc.1`：pi-ai 对齐 `0.84.2`；FPK 回调、native 配置与 CI 同步；发布清单补入 `@dicjun/dsh-fnos` 并按精确版本固定安装（codex-auth `0.1.2-rc.1`、fnos `0.1.2-rc.1.1`）；确认 fnos 插件 `remote.session` inject 修复（TV-05～TV-08）。 |
 | 2026-09-04 | 增加 Codex 授权码自动复制任务（T01-06）。 |
 | 2026-08-28 | 建立 PLAN-FNOS-002，纳入 Codex 五小时用量自动显隐 |
 | 2026-08-28 | 将原 FNOS-003 合并到 FNOS-002-04，确定 `connect + http-proxy-middleware`、tsdown FPK 产物、持久 JSON、`fs.watch + SSE` 即时更新和保存/放弃交互 |

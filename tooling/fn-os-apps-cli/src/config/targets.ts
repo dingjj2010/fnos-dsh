@@ -7,7 +7,7 @@ export type PluginTarget = {
   value: string
   /** 展示名称，优先使用包内的 displayName。 */
   label: string
-  /** 完整 npm 包名，例如 @tnnevol/dsh-codex-auth。 */
+  /** 完整 npm 包名，例如 @dicjun/dsh-codex-auth。 */
   name: string
   /** Turbo filter，包含依赖图。 */
   filter: string
@@ -25,7 +25,7 @@ type PluginManifest = {
 // 仅保留历史 CLI 简称，避免破坏既有 `--plugin codex` / `--plugin showcase` 用法。
 // 插件列表本身完全由 plugins/ 目录动态发现，新增插件无需在此登记。
 const LEGACY_ALIASES: Record<string, string> = {
-  '@tnnevol/dsh-codex-auth': 'codex',
+  '@dicjun/dsh-codex-auth': 'codex',
   '@tnnevol/dsh-semi-ui-showcase': 'showcase',
 }
 

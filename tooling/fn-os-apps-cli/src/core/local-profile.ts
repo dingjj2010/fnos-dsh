@@ -11,13 +11,13 @@ const DEV_PROFILE = 'web'
  * Plugins that live in this repository but are not linked into the local
  * profile.
  *
- * `@tnnevol/dsh-fnos` is the FPK-only integration: it registers fnOS settings
+ * `@dicjun/dsh-fnos` is the FPK-only integration: it registers fnOS settings
  * namespaces, the fnOS JS SDK bridge and gateway-prefixed routes, so it has
  * nothing to serve outside the fnOS host and would only add failing rows to a
  * developer's local profile. The other repository plugins are usable from any
  * DSH client and are linked in.
  */
-const LOCAL_PROFILE_EXCLUDED_PLUGINS = new Set(['@tnnevol/dsh-fnos'])
+const LOCAL_PROFILE_EXCLUDED_PLUGINS = new Set(['@dicjun/dsh-fnos'])
 
 /** Repository plugins the local profile should carry, in stable plugin order. */
 export const localProfilePlugins: PluginTarget[] = pluginTargets

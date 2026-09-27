@@ -34,7 +34,7 @@ pnpm run version -- plugin showcase patch
 pnpm run version -- plugin
 ```
 
-插件列表由 CLI 动态扫描 `plugins/` 目录发现，新增插件无需改动 CLI。每个插件的别名为包名去掉 `dsh-` 前缀后的部分（如 `@tnnevol/dsh-fnos` → `fnos`、`@tnnevol/dsh-codebuddy` → `codebuddy`），也可直接使用完整包名。历史简称 `codex`、`showcase` 仍保留兼容。
+插件列表由 CLI 动态扫描 `plugins/` 目录发现，新增插件无需改动 CLI。每个插件的别名为包名去掉 `dsh-` 前缀后的部分（如 `@dicjun/dsh-fnos` → `fnos`、`@dicjun/dsh-codebuddy` → `codebuddy`），也可直接使用完整包名。历史简称 `codex`、`showcase` 仍保留兼容。
 
 插件版本命令不会修改根项目、共享包、FPK Manifest 或未选中的插件；默认只创建版本提交，不创建 Git Tag。使用 `--no-commit` 可只执行文件更新；`--no-tag` 对插件版本命令保持兼容但无额外作用。脚本默认不会自动 push，推送由发布者确认后执行。
 

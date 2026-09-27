@@ -31,7 +31,7 @@ describe('dsh-fnos package contract', () => {
       dsh: { bundle: { patch: string }, client: { platform: string, immediately: boolean, inject: string[] } }
       devDependencies: { '@trimjs/web-app': string, '@tnnevol/dsh-semi-ui': string }
     }
-    expect(manifest.name).toBe('@tnnevol/dsh-fnos')
+    expect(manifest.name).toBe('@dicjun/dsh-fnos')
     expect(manifest.version).toMatch(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u)
     expect(manifest.dsh.bundle.patch).toBe('./cordis.patch.yml')
     expect(manifest.dsh.client.platform).toBe('web')
@@ -74,7 +74,7 @@ describe('dsh-fnos package contract', () => {
   it('only registers itself and does not patch the official directory picker', async () => {
     const patch = await readFile(new URL('../../cordis.patch.yml', import.meta.url), 'utf8')
     expect(patch).toContain('id: dsh-fnos')
-    expect(patch).toContain("name: '@tnnevol/dsh-fnos'")
+    expect(patch).toContain("name: '@dicjun/dsh-fnos'")
     expect(patch).not.toContain('directory-picker')
     expect(patch).not.toContain('@deepseek-ai/dsh-host-directory-picker-browse')
   })

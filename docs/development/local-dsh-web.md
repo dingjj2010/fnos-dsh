@@ -49,7 +49,7 @@ Turbo 不允许在没有终端界面的情况下运行 interactive 任务，所�
 2. 再用 `dsh plugin --profile web add <插件目录>` 逐个链接。由 DSH CLI 写入（而不是直接改 profile 清单）才会把插件同步进 `dsh.profile.bundles`，插件因此真正成为一层 patch layer。
 3. 已链接且已在 bundle 列表中的插件会被跳过，重复启动不重复安装；链接后的插件产物变更由 `start` 的插件 watch 或重新构建生效。
 
-内置范围是仓库里可在任意 DSH 客户端使用的插件。**`@tnnevol/dsh-fnos` 不在其中**：它注册 fnOS 设置命名空间、fnOS JS SDK 桥和网关前缀路由，脱离 fnOS 宿主没有可提供的能力，只会给本地 profile 增加加载失败的行。
+内置范围是仓库里可在任意 DSH 客户端使用的插件。**`@dicjun/dsh-fnos` 不在其中**：它注册 fnOS 设置命名空间、fnOS JS SDK 桥和网关前缀路由，脱离 fnOS 宿主没有可提供的能力，只会给本地 profile 增加加载失败的行。
 
 ## 状态目录
 

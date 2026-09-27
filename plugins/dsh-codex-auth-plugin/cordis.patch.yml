@@ -1,6 +1,6 @@
 - insert:
     - id: dsh-codex-auth
-      name: '@tnnevol/dsh-codex-auth'
+      name: '@dicjun/dsh-codex-auth'
 
 # Use the official pi-ai settings family so the DSH Models page renders the
 # provider's credential status and its standard model-catalog editor. The

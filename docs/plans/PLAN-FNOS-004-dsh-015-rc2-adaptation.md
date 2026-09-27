@@ -90,7 +90,7 @@ DSH 0.1.5-rc.2 发布包
 
 | 任务 ID | 对应验收 | 实现内容 | 验收 |
 | --- | --- | --- | --- |
-| PLAN-FNOS-004-T05-01 | FNOS-004-02-AC-01 | 在 `published-dsh-plugins.json` 的 `plugins` 中维护 `@tnnevol/dsh-codebuddy` 与 `@tnnevol/dsh-codex-auth` 的精确版本；仓库内插件使用 `pnpm pack` 生成精确版本归档，核验包名、版本和运行依赖，安装回调用 DSH CLI `file:` spec 安装；发现旧 `link:` 同版本安装时重新安装归档 | 清单包含 CodeBuddy、Codex 且与内置归档元数据一致，干净及旧 profile 均能解析两个插件依赖并启动 Web |
+| PLAN-FNOS-004-T05-01 | FNOS-004-02-AC-01 | 在 `published-dsh-plugins.json` 的 `plugins` 中维护 `@dicjun/dsh-codebuddy` 与 `@dicjun/dsh-codex-auth` 的精确版本；仓库内插件使用 `pnpm pack` 生成精确版本归档，核验包名、版本和运行依赖，安装回调用 DSH CLI `file:` spec 安装；发现旧 `link:` 同版本安装时重新安装归档 | 清单包含 CodeBuddy、Codex 且与内置归档元数据一致，干净及旧 profile 均能解析两个插件依赖并启动 Web |
 | PLAN-FNOS-004-T05-02 | FNOS-004-02-AC-02 | 确认安装/升级只按清单对 Codex 执行安装或精确版本校准，不删除用户凭据、模型配置、workspace、授权目录和 profile bundle | 老用户已有 Codex 凭据、配置和 bundle 在升级后逐项保持不变 |
 | PLAN-FNOS-004-T05-03 | FNOS-004-02-AC-03 | 为安装回调增加新用户、老用户和重复升级场景的隔离回归夹具，记录安装、升级和跳过的日志 | 新用户装到清单精确版本；老用户保留用户数据；重复执行幂等 |
 | PLAN-FNOS-004-T05-04 | FNOS-004-02-AC-04 | 移除构建 CLI 与文档中的 Codex 排除规则，改为校验清单包含 Codex 且归档版本与清单一致；三方插件（dshmarket）仍不进入内置目录，安装回调通过 DSH CLI 单独安装 | 构建产物内置 Codex 归档且无浮动版本安装；本地 FPK 检查和真实 NAS 升级验证结果一致 |
@@ -346,21 +346,21 @@ DSH 0.1.5-rc.2 发布包
 ### 插件与共享包检查
 
 ```bash
-pnpm --filter @tnnevol/dsh-fnos run typecheck
-pnpm --filter @tnnevol/dsh-fnos run test:unit
-pnpm --filter @tnnevol/dsh-fnos run build
-pnpm --filter @tnnevol/dsh-codex-auth run typecheck
-pnpm --filter @tnnevol/dsh-codex-auth run test:unit
-pnpm --filter @tnnevol/dsh-codex-auth run build
-pnpm --filter @tnnevol/dsh-codebuddy run typecheck
-pnpm --filter @tnnevol/dsh-codebuddy run test:unit
-pnpm --filter @tnnevol/dsh-codebuddy run build
-pnpm --filter @tnnevol/dsh-semi-ui-showcase run typecheck
-pnpm --filter @tnnevol/dsh-semi-ui-showcase run test:unit
-pnpm --filter @tnnevol/dsh-semi-ui-showcase run build
-pnpm --filter @tnnevol/dsh-semi-ui run typecheck
-pnpm --filter @tnnevol/dsh-semi-ui run test:unit
-pnpm --filter @tnnevol/dsh-semi-ui run build
+pnpm --filter @dicjun/dsh-fnos run typecheck
+pnpm --filter @dicjun/dsh-fnos run test:unit
+pnpm --filter @dicjun/dsh-fnos run build
+pnpm --filter @dicjun/dsh-codex-auth run typecheck
+pnpm --filter @dicjun/dsh-codex-auth run test:unit
+pnpm --filter @dicjun/dsh-codex-auth run build
+pnpm --filter @dicjun/dsh-codebuddy run typecheck
+pnpm --filter @dicjun/dsh-codebuddy run test:unit
+pnpm --filter @dicjun/dsh-codebuddy run build
+pnpm --filter @dicjun/dsh-semi-ui-showcase run typecheck
+pnpm --filter @dicjun/dsh-semi-ui-showcase run test:unit
+pnpm --filter @dicjun/dsh-semi-ui-showcase run build
+pnpm --filter @dicjun/dsh-semi-ui run typecheck
+pnpm --filter @dicjun/dsh-semi-ui run test:unit
+pnpm --filter @dicjun/dsh-semi-ui run build
 ```
 
 ### 应用与文档检查

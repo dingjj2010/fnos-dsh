@@ -34,7 +34,7 @@ vi.mock('../src/core/turbo.js', () => ({
 
 const { runStart } = await import('../src/commands/start.js')
 
-const pluginFilter = '@tnnevol/dsh-fnos...'
+const pluginFilter = '@dicjun/dsh-fnos...'
 
 /** Pretend to be (or not be) a terminal: only a real TTY may host Turbo's TUI. */
 function fakeTty(value: boolean): void {

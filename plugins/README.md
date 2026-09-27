@@ -14,7 +14,7 @@ plugins/
 ```
 
 面向特定 Agent 生态的插件可以保留生态约定的独立名称，例如 DSH 插件
-`@tnnevol/dsh-codex-auth`，不强制追加 `agent-plugin-` 前缀。
+`@dicjun/dsh-codex-auth`，不强制追加 `agent-plugin-` 前缀。
 
 ## 飞牛 fnOS 专用插件
 

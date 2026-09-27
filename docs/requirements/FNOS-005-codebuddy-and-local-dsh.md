@@ -60,7 +60,7 @@ lastVerified: 2026-09-17
 - 管理后台增加「一键完成成长任务」按钮：触发全账号可自动化成长任务执行队列，并展示执行状态与结果。
 - 仓库根目录通过 `pnpm install` 安装与 FPK 运行时基线一致的 `dsh` CLI，插件调试不再依赖全局安装。
 - `fn-apps-cli start` 提供「启动 DSH Web」目标，并以仓库根 `.dsh` 作为该实例的 `DSH_HOME`；profile、凭据、会话和本地状态不写入开发者的 `$HOME/.dsh`。
-- 启动本地 DSH Web 时自动把本仓库的插件链接进该 profile，使新克隆的检出目录无需手工安装插件即可调试；`@tnnevol/dsh-fnos` 属于 FPK 专用集成，不进入本地 profile。
+- 启动本地 DSH Web 时自动把本仓库的插件链接进该 profile，使新克隆的检出目录无需手工安装插件即可调试；`@dicjun/dsh-fnos` 属于 FPK 专用集成，不进入本地 profile。
 
 ## 涉及范围
 
@@ -97,7 +97,7 @@ lastVerified: 2026-09-17
 | FNOS-005-11 | P1 | 仓库内安装 DSH CLI | 在仓库根执行 `pnpm install` 后，`node_modules/.bin/dsh --version` 输出与根依赖一致的版本，无需全局安装 | <Badge type="tip" text="已完成" /> |
 | FNOS-005-12 | P1 | start 增加本地 DSH Web 启动目标 | 执行 `pnpm run start` 可在交互多选中选择「DSH Web」，或用 `pnpm run start -- --web` 直接启动；本地端口固定 8070 | <Badge type="tip" text="已完成" /> |
 | FNOS-005-13 | P1 | 本地 DSH_HOME 指向仓库根 .dsh | 启动后的 profile、凭据和会话位于 `<仓库根>/.dsh`，`$HOME/.dsh` 不被本次启动写入 | <Badge type="tip" text="已完成" /> |
-| FNOS-005-14 | P1 | 仓库插件内置进本地 profile | 启动本地 DSH Web 时自动把仓库插件链接进 `.dsh` profile，无需手工 `dsh plugin add`；`@tnnevol/dsh-fnos` 不内置 | <Badge type="tip" text="已完成" /> |
+| FNOS-005-14 | P1 | 仓库插件内置进本地 profile | 启动本地 DSH Web 时自动把仓库插件链接进 `.dsh` profile，无需手工 `dsh plugin add`；`@dicjun/dsh-fnos` 不内置 | <Badge type="tip" text="已完成" /> |
 | FNOS-005-15 | P1 | 单账号「一键完成」与跨账号执行互斥 | 账号信息弹框「成长任务」Tab 的刷新按钮旁新增「一键完成」，只跑该账号全部可自动化任务；该账号在跑时账号管理页的「完成任务」（全账号）按钮禁用，其他账号的单项「完成」与本按钮保持可点 | <Badge type="tip" text="已完成" /> |
 | FNOS-005-16 | P1 | 风控指纹对齐与「跑完但没完成」修复 | 出站请求对齐来源的客户端指纹头族与节流节奏；专家类任务改用服务端真实 chat requestId 判据；执行结束后按账号回读真实任务状态并如实汇报未完成项，不再只看「任务跑完」 | <Badge type="tip" text="已完成" /> |
 
@@ -153,7 +153,7 @@ lastVerified: 2026-09-17
 - 本地 DSH 开发环境只涉及仓库开发工具链，不修改 FPK 应用、网关、插件运行时行为，也不改变 FPK 中 dsh CLI 的私有安装策略。
 - 本地 profile 内置是幂等的：已链接且已列入 `dsh.profile.bundles` 的插件不重复安装；链接必须经 DSH CLI 完成，因为只有 CLI 会把新插件同步进 bundle 列表、使其成为一层 patch layer。
 - 链接前必须先构建插件：profile 通过包 `exports` 解析入口，入口指向 git 忽略的 `lib/`，缺少产物时链入的是无法加载的包。
-- `@tnnevol/dsh-fnos` 不进入本地 profile：它注册 fnOS 设置命名空间、fnOS JS SDK 桥与网关前缀路由，脱离 fnOS 宿主没有可提供的能力。
+- `@dicjun/dsh-fnos` 不进入本地 profile：它注册 fnOS 设置命名空间、fnOS JS SDK 桥与网关前缀路由，脱离 fnOS 宿主没有可提供的能力。
 - 本地内置只影响 `.dsh` profile，不改变 FPK 的插件清单、内置归档与安装策略。
 
 ## 不在本次范围内
@@ -278,7 +278,7 @@ lastVerified: 2026-09-17
 - `FNOS-005-14-AC-01`：删除仓库 `.dsh` 后执行 `pnpm run start -- --web`，CLI 先构建并链接仓库插件，DSH Web 启动后这些插件均已加载。
 - `FNOS-005-14-AC-02`：链接经 DSH CLI 完成，`dsh --profile web --dump-config` 中每个内置插件各成一行 patch layer。
 - `FNOS-005-14-AC-03`：重复启动不重复安装，已链接且已在 bundle 列表中的插件被跳过。
-- `FNOS-005-14-AC-04`：本地 profile 的依赖与 `dsh.profile.bundles` 均不含 `@tnnevol/dsh-fnos`。
+- `FNOS-005-14-AC-04`：本地 profile 的依赖与 `dsh.profile.bundles` 均不含 `@dicjun/dsh-fnos`。
 
 ### FNOS-005-15 验收条件
 
@@ -327,7 +327,7 @@ lastVerified: 2026-09-17
 | 仓库内安装 DSH CLI | <Badge type="tip" text="已完成" /> | 根依赖声明与 FPK 同版本的 `@deepseek-ai/dsh`，补声明 pnpm 布局下不可解析的 `dsh-llm-pi-ai`，原生依赖安装脚本显式拒绝 | 已完成；本机安装、启动与版本核对通过 |
 | start 增加本地 DSH Web 启动目标 | <Badge type="tip" text="已完成" /> | `--web` 与交互多选新增「DSH Web」，固定 8070 端口，与 Turbo watch 目标互斥 | 已完成；本机启动、端口与组合拒绝均实测通过 |
 | 本地 DSH_HOME 指向仓库根 .dsh | <Badge type="tip" text="已完成" /> | 子进程注入 `DSH_HOME=<仓库根>/.dsh`，清除继承的 DSH 会话身份，`.dsh/` 加入忽略规则 | 已完成；profile 落点与忽略规则实测通过 |
-| 仓库插件内置进本地 profile | <Badge type="tip" text="已完成" /> | 启动前用 Turbo 构建并经 DSH CLI 链接；已在 bundle 中的跳过；排除 `@tnnevol/dsh-fnos` | 已完成；清空 `.dsh` 后全流程实测通过，二次启动幂等 |
+| 仓库插件内置进本地 profile | <Badge type="tip" text="已完成" /> | 启动前用 Turbo 构建并经 DSH CLI 链接；已在 bundle 中的跳过；排除 `@dicjun/dsh-fnos` | 已完成；清空 `.dsh` 后全流程实测通过，二次启动幂等 |
 | 单账号「一键完成」与跨账号互斥 | <Badge type="tip" text="已完成" /> | 弹框内刷新左侧新增「一键完成」；宿主改按账号加锁，运行中禁用全账号按钮与该账号单项按钮，其他账号不受影响 | 已完成；实现与构建通过，账号级互斥与禁用范围由单测守住 |
 | 风控指纹对齐与「跑完但没完成」修复 | <Badge type="tip" text="已完成" /> | 对齐来源指纹头族与节流间隔；专家类任务改用真实 chat requestId；桌面链补全事件载荷；执行后按账号回读并如实汇报未达标项 | 已完成；实现与构建通过，动作契约与汇报语义由单测守住 |
 | 异常未捕获加固 | <Badge type="tip" text="已完成" /> | 修掉 `startLogin` 中 `void p.finally(...)` 漏掉的派生拒绝（会经 fail-loud 终止整个宿主进程）；客户端在唯一取 rpc 处收敛为「永不拒绝」，消除静默跳过收尾与未处理拒绝 | 已完成；两处均有行为用例，接线由源码结构断言守住，mutation 验证可捕获 |
@@ -364,7 +364,7 @@ lastVerified: 2026-09-17
 | 2026-09-15 | 允许 DSH Web 与其他目标同时启动 | 原「必须单独选择」的约束被用户使用反馈证伪，改为可与插件/文档并行；FNOS-005-12-AC-03 同步改写 |
 | 2026-09-15 | 改回保留 TUI 的实现 | 首次修复用 `--ui=stream` 关掉 TUI 换取并行，属错误修法（用户要求保留 TUI 多任务形态）。改为把 DSH Web 做成 Turbo 根任务 `//#dev:web`，与 `dev` 交给同一个 `turbo watch`，TUI 保留且各占一行；因 Turbo 严格模式会剥掉未声明的 `DSH_HOME`，该任务声明 `passThroughEnv` |
 | 2026-09-15 | 补齐依赖安装策略 | 记录 DSH 原生依赖使用预编译产物、`allowBuilds` 显式拒绝安装脚本的原因，避免 `pnpm install` 因被忽略的构建脚本失败；补声明 pnpm 隔离布局下不可解析的 `@deepseek-ai/dsh-llm-pi-ai` |
-| 2026-09-15 | 新增 FNOS-005-14 | 本地 DSH Web 启动时自动把仓库插件内置进 `.dsh` profile（先 Turbo 构建，再经 `dsh plugin --profile web add` 链接）；按用户要求排除 FPK 专用的 `@tnnevol/dsh-fnos` |
+| 2026-09-15 | 新增 FNOS-005-14 | 本地 DSH Web 启动时自动把仓库插件内置进 `.dsh` profile（先 Turbo 构建，再经 `dsh plugin --profile web add` 链接）；按用户要求排除 FPK 专用的 `@dicjun/dsh-fnos` |
 | 2026-09-16 | FNOS-005 验收完成 | FNOS-005-01 至 FNOS-005-14 全部功能均已验证通过，需求状态与验收记录确认完成 |
 | 2026-09-17 | 新增 FNOS-005-15 | 弹框「成长任务」Tab 的刷新左侧新增单账号「一键完成」；宿主由全局单队列改为按账号互斥，使「该账号在跑时禁用全账号按钮、其他账号不受影响」可真实成立（否则其他账号可点但会被宿主拒绝） |
 | 2026-09-17 | 新增 FNOS-005-16 | 逐条比对来源 `workbuddy2api-panel` 后补齐风控与判据差异：指纹头族（`X-CodeBuddy-Request`/`X-Machine-ID`/`X-Session-ID`/桌面 UA）、上报与召唤链节流、`expert_actual_use` 必须 JOIN 真实 chat requestId、桌面链完整事件载荷；并明确「按账号回读真实状态、未达标如实汇报」的语义 |

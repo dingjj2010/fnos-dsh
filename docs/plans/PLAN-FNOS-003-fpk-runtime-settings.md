@@ -211,9 +211,9 @@ pnpm run check -- --sdd --docs
 ### CodeBuddy 插件检查
 
 ```bash
-pnpm --filter @tnnevol/dsh-codebuddy run typecheck
-pnpm --filter @tnnevol/dsh-codebuddy run test:unit
-pnpm --filter @tnnevol/dsh-codebuddy run build
+pnpm --filter @dicjun/dsh-codebuddy run typecheck
+pnpm --filter @dicjun/dsh-codebuddy run test:unit
+pnpm --filter @dicjun/dsh-codebuddy run build
 ```
 
 测试覆盖多账号存储迁移、账号操作、额度与自动切换，以及 Token 统计数据聚合；本地已通过这些命令并保留测试通过记录。

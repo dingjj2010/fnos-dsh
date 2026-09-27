@@ -6,7 +6,7 @@ import { dshSemiClientDeps } from '../../packages/dsh-semi-ui/tsdown-client-deps
 
 // DSH's client module graph is keyed by the npm package name. The handoff ID
 // must therefore match package.json exactly, including the scope.
-const PLUGIN_ID = '@tnnevol/dsh-codex-auth'
+const PLUGIN_ID = '@dicjun/dsh-codex-auth'
 const PACKAGE_VERSION = (JSON.parse(
   readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
 ) as { version: string }).version

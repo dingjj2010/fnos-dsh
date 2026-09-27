@@ -90,11 +90,11 @@ lastVerified: 2026-09-16
 ### FNOS-006-01、FNOS-006-02 验收结果
 
 - `packages/fnos-gateway/src/install-callback-helper/` 已拆分为 `index.ts`、`common.ts`、`node-pty.ts` 与 `attachment-patch.ts`，类型检查和 lint 通过。
-- `packages/fnos-gateway/tsdown.app.config.ts` 固定输出 `apps/fn-deepseek-harness/app/scripts/install-callback-helper.mjs`，`pnpm --filter @tnnevol/fnos-gateway run build:app` 可重复生成；产物在 Node 24 下可执行，未知子命令返回非零。
+- `packages/fnos-gateway/tsdown.app.config.ts` 固定输出 `apps/fn-deepseek-harness/app/scripts/install-callback-helper.mjs`，`pnpm --filter @dicjun/fnos-gateway run build:app` 可重复生成；产物在 Node 24 下可执行，未知子命令返回非零。
 - 全部安装辅助子命令（含 `prepare-node-pty` 与 `patch-attachment-local`）由同一入口分发；旧 `install-node-pty.sh` 与 `patch-dsh-attachment-local.mjs` 已删除，回调中不再有相关变量或路径。
 - `cmd/install_callback` 中 `node -e` 计数为 0，大段内联 JavaScript 已移除；只保留环境读取、步骤顺序、`run_install_callback_helper` 调用、`fail_install` 错误退出和 helper 缺失检查。
 - 权限保持由 `config/privilege` 的 `run-as=package` 提供，回调不再出现 `runuser`、`chown`、`TRIM_UID` 或 `TRIM_GROUPNAME` 处理。
-- `pnpm --filter @tnnevol/fnos-gateway check` 通过（13 个测试文件、54 项测试）；`bash -n` 与 `node --check` 通过。
+- `pnpm --filter @dicjun/fnos-gateway check` 通过（13 个测试文件、54 项测试）；`bash -n` 与 `node --check` 通过。
 - 待真实 fnOS NAS 完成新装、重复安装与升级验证后再标记为“已完成”。
 
 ### FNOS-006-03 验收条件
@@ -119,7 +119,7 @@ lastVerified: 2026-09-16
 
 ### FNOS-006-06 验收条件
 
-- `pnpm --filter @tnnevol/fnos-gateway typecheck` 和相关测试通过。
+- `pnpm --filter @dicjun/fnos-gateway typecheck` 和相关测试通过。
 - `pnpm run check -- --all` 通过。
 - `pnpm run build -- --docs` 通过。
 - `pnpm exec fn-apps-cli build -- --fpk --app fn-deepseek-harness --bundle-dsh-plugins` 通过，并确认 FPK 中包含编译后的 helper。
@@ -138,7 +138,7 @@ lastVerified: 2026-09-16
 - `plugins/dsh-codebuddy-plugin/src/host/session.ts` 为 `identity()` 的 token 刷新与 `models()` 的目录读取所派生的 `finally()` promise 增加收口，调用方仍收到原始错误。
 - `plugins/dsh-codebuddy-plugin/src/host/auth-service.ts` 的自动签到、旅行派发、旅行领取和自动切换周期改由 `runCycleDetached()` 启动，周期失败只记录日志；同一 runner 的 RPC 调用方仍收到拒绝。
 - 回归测试覆盖 SSE 中止与无未处理拒绝（`tests/sse.spec.ts`）、延迟拒绝（`tests/deferred-rejection.spec.ts`）和周期收口（`tests/auto-switch-interval.spec.ts`、`tests/auto-switch-toggle.spec.ts`）；`tests/deferred-rejection.spec.ts` 已验证在回退到修复前实现时会失败。
-- 验证命令：`pnpm --filter @tnnevol/dsh-codebuddy check`、`pnpm --filter @tnnevol/dsh-codebuddy build`、`pnpm run check -- --all`、`pnpm run build -- --docs` 均通过；CodeBuddy 812 项插件测试通过。
+- 验证命令：`pnpm --filter @dicjun/dsh-codebuddy check`、`pnpm --filter @dicjun/dsh-codebuddy build`、`pnpm run check -- --all`、`pnpm run build -- --docs` 均通过；CodeBuddy 812 项插件测试通过。
 - 端到端复现：CodeBuddy 模型思考中发起停止会话，流以 `AbortError` 干净结束，进程继续运行，未出现 `dsh: fatal load failure`。
 - 目标环境结论：用户已在真实使用环境确认「思考中停止会话不再导致 DSH 客户端服务停止」，FNOS-006-07 验收通过。
 

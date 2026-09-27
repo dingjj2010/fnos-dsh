@@ -19,7 +19,7 @@ lastVerified: 2026-08-24
 
 ## 需求背景与目标
 
-DSH 运行在 fnOS 后，需要处理 iframe 入口、数据持久化、应用网关和 NAS 文件权限。直接修改 DSH 源码会增加升级成本，因此适配代码放在 `fn-deepseek-harness`、`@tnnevol/dsh-fnos` 和 `@tnnevol/dsh-codex-auth` 中维护。
+DSH 运行在 fnOS 后，需要处理 iframe 入口、数据持久化、应用网关和 NAS 文件权限。直接修改 DSH 源码会增加升级成本，因此适配代码放在 `fn-deepseek-harness`、`@dicjun/dsh-fnos` 和 `@dicjun/dsh-codex-auth` 中维护。
 
 本需求让 DSH 在 fnOS 中稳定运行，并补齐主题、授权目录、工作区、NAS 文件引用、文件打开、宿主标题和会话日志导出。
 

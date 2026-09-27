@@ -183,7 +183,7 @@ lastVerified: 2026-09-17
 | PLAN-FNOS-005-T14-01 | FNOS-005-14-AC-01 | 新增 `src/core/local-profile.ts`：启动 DSH Web 前先用 `turbo run build` 构建待链接插件，再逐个 `dsh plugin --profile web add <插件目录>` | 新克隆的检出目录启动后 profile 含仓库插件，且各插件 `lib/` 产物已就绪 |
 | PLAN-FNOS-005-T14-02 | FNOS-005-14-AC-02 | 链接走 DSH CLI 而不是直接改写 profile 清单，由 CLI 的 `reconcilePlugins` 把插件同步进 `dsh.profile.bundles` | `--dump-config` 中三个插件各成一行 patch layer |
 | PLAN-FNOS-005-T14-03 | FNOS-005-14-AC-03 | 已链接且已在 bundle 列表中的插件跳过安装 | 第二次启动无 `Linking` 日志，Turbo 全量缓存命中 |
-| PLAN-FNOS-005-T14-04 | FNOS-005-14-AC-04 | 内置范围显式排除 `@tnnevol/dsh-fnos` | 本地 profile 的依赖与 bundle 列表不含 `@tnnevol/dsh-fnos` |
+| PLAN-FNOS-005-T14-04 | FNOS-005-14-AC-04 | 内置范围显式排除 `@dicjun/dsh-fnos` | 本地 profile 的依赖与 bundle 列表不含 `@dicjun/dsh-fnos` |
 | PLAN-FNOS-005-T14-05 | FNOS-005-14-AC-01/02/03/04 | 新增 `tests/local-profile.spec.ts` 覆盖排除规则、构建与链接命令、已链接跳过、仅依赖未入 bundle 时重链 | `vitest run` 全部通过 |
 
 ### 详细交互：仓库插件内置进本地 profile
@@ -193,7 +193,7 @@ lastVerified: 2026-09-17
 3. 读取本地 profile 清单，逐插件判断是否已 `link:<插件目录>` 且已列入 `dsh.profile.bundles`；未满足的先打印 `Linking <包名> into web profile`，再执行 `dsh plugin --profile web add <插件目录>`。
 4. 全部就绪后启动 `dsh web --no-open --port 8070`。首次启动的 profile 由 DSH CLI 自动初始化；插件的最小运行依赖（如 CodeBuddy 的 `echarts`、`nanostores`）由 pnpm 装在 profile 目录内。
 5. 重复启动时不再链接、不再安装，插件产物变更由 `start` 的插件 watch 或重新构建生效。
-6. `@tnnevol/dsh-fnos` 始终不进入本地 profile：它注册 fnOS 设置命名空间、fnOS JS SDK 桥和网关前缀路由，脱离 fnOS 宿主无可用能力。
+6. `@dicjun/dsh-fnos` 始终不进入本地 profile：它注册 fnOS 设置命名空间、fnOS JS SDK 桥和网关前缀路由，脱离 fnOS 宿主无可用能力。
 
 ### 详细交互：本地 DSH Web
 
@@ -275,7 +275,7 @@ lastVerified: 2026-09-17
 | P1 仓库内安装 DSH CLI | <Badge type="tip" text="已完成" /> | 根依赖与 FPK 同版本；`pnpm install` 非交互完成 |
 | P1 start 增加本地 DSH Web 启动目标 | <Badge type="tip" text="已完成" /> | `--web` 与交互多选可用；固定 8070；与 Turbo watch 目标互斥 |
 | P1 本地 DSH_HOME 指向仓库根 .dsh | <Badge type="tip" text="已完成" /> | 启动注入 `DSH_HOME`；profile 落在仓库内；`.dsh/` 不进入版本库 |
-| P1 仓库插件内置进本地 profile | <Badge type="tip" text="已完成" /> | 先构建再经 DSH CLI 链接；已在 bundle 中的跳过；排除 `@tnnevol/dsh-fnos` |
+| P1 仓库插件内置进本地 profile | <Badge type="tip" text="已完成" /> | 先构建再经 DSH CLI 链接；已在 bundle 中的跳过；排除 `@dicjun/dsh-fnos` |
 | P1 单账号「一键完成」与跨账号互斥 | <Badge type="tip" text="已完成" /> | 弹框内刷新左侧新增按钮；宿主按账号加锁；运行中禁用全账号按钮与该账号单项按钮，其他账号不受影响 |
 | P1 风控指纹对齐与「跑完但没完成」修复 | <Badge type="tip" text="已完成" /> | 头族与节流对齐来源；专家类任务用真实 chat requestId；按账号回读并如实汇报未达标 |
 
@@ -310,7 +310,7 @@ lastVerified: 2026-09-17
 | 2026-09-15 | T12-03 改为 Turbo 根任务 | 先前用 `--ui=stream` 关闭 TUI 的做法被用户否决（要求保留 TUI 多任务形态）；T12-03 改为把 DSH Web 做成根任务 `//#dev:web`，与 `dev` 同处一个 `turbo watch`。实测三类目标全选时日志为 `//#dev:web, dev in 5 packages`，3150 与 9876 同时可访问 |
 | 2026-09-15 | 补齐依赖安装策略 | T11-02 补 `@deepseek-ai/dsh-llm-pi-ai` 根依赖以修复 profile 首次启动的 `ERR_MODULE_NOT_FOUND`；T11-03 用 `allowBuilds` 显式拒绝原生依赖安装脚本，保持 `pnpm install` 非交互 |
 | 2026-09-15 | 回归验证 | CLI typecheck/build 通过；`tests/start.spec.ts` 与 `tests/version.spec.ts` 共 10 条用例通过；`pnpm run start -- --web` 实测输出 3150 地址，`--web --docs` 组合报错退出 |
-| 2026-09-15 | 仓库插件内置进本地 profile | 新增 T14：启动 DSH Web 前先用 Turbo 构建、再经 `dsh plugin --profile web add` 把仓库插件链接进本地 profile，使新克隆的检出目录也能直接进入带插件的 DSH Web；按用户要求排除 `@tnnevol/dsh-fnos` |
+| 2026-09-15 | 仓库插件内置进本地 profile | 新增 T14：启动 DSH Web 前先用 Turbo 构建、再经 `dsh plugin --profile web add` 把仓库插件链接进本地 profile，使新克隆的检出目录也能直接进入带插件的 DSH Web；按用户要求排除 `@dicjun/dsh-fnos` |
 | 2026-09-17 | 新增 T15：单账号「一键完成」与按账号互斥 | 用户要求弹框内提供单账号一键完成、且该账号在跑时禁用账号管理页「完成任务」而其他账号不禁用。原实现是单一全局 `growthTasksGuard`，其他账号按钮虽可点但会被宿主判重拒绝——因此必须把宿主改成按账号加锁（T15-02），否则「其他账号不禁用」只是表面成立。运行态模型随之从单个 `mode/accountId` 升级为账号集合（T15-03） |
 | 2026-09-17 | 新增 T16：风控指纹对齐与「跑完但没完成」修复 | 用户反馈「任务跑完了但实际没跑完，要到弹框里一个个点」。逐条比对来源后确认两类差异：① 出站指纹与节流未对齐（缺 `X-CodeBuddy-Request`/`X-Machine-ID`/`X-Session-ID`、上报间隔与账号限速缺失），未对齐时上游可能受理但静默不计分；② 部分判据与来源不一致（专家类自造 requestId 不计数、`Expert_lighthouse` 的 mode/type/cost 形态、桌面链字段集不足）。同时把「动作已发送」与「任务已完成」在结果与日志里彻底分开（T16-05） |
 | 2026-09-18 | 本地 DSH Web 端口改为 8070 | 按用户要求把 T12-02 的固定端口从 3150 改为 8070；`package.json#dev:web`、CLI 启动提示、README 与相关文档同步更新。FPK 网关 `127.0.0.1:3080` 与文档服务 9876 不变 |

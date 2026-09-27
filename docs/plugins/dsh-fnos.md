@@ -1,13 +1,13 @@
 # fnOS
 
-`@tnnevol/dsh-fnos` 补齐 DSH 在 fnOS 应用中的系统集成。当前版本见[插件总览](/plugins/)，适配 DSH `0.1.7-rc.2`。
+`@dicjun/dsh-fnos` 补齐 DSH 在 fnOS 应用中的系统集成。当前版本见[插件总览](/plugins/)，适配 DSH `0.1.7-rc.2`。
 
 ## 安装
 
 `fn-deepseek-harness` 会在安装和升级时通过 DSH CLI 安装精确版本。手动安装可执行：
 
 ```sh
-dsh plugin --profile web add @tnnevol/dsh-fnos@0.1.7-rc.2
+dsh plugin --profile web add @dicjun/dsh-fnos@0.1.7-rc.2
 dsh --profile web --dump-config
 ```
 
@@ -151,7 +151,7 @@ dsh --profile web --dump-config | grep -n -C 3 'dsh-fnos'
 ## 本地开发
 
 ```sh
-pnpm --filter @tnnevol/dsh-fnos run check
+pnpm --filter @dicjun/dsh-fnos run check
 dsh plugin --profile web add /absolute/path/to/fn-os-apps/plugins/dsh-fnos-plugin
 dsh web --no-open
 ```
@@ -160,7 +160,7 @@ dsh web --no-open
 
 ## 链接
 
-- [npm](https://www.npmjs.com/package/@tnnevol/dsh-fnos)
+- [npm](https://www.npmjs.com/package/@dicjun/dsh-fnos)
 - [源码](https://github.com/FNOSP/fnos-dsh/tree/main/plugins/dsh-fnos-plugin)
 - [fnOS JS SDK](https://developer.fnnas.com/)
 - [需求清单](/requirements/FNOS-001-dsh-fnos-adaptation)

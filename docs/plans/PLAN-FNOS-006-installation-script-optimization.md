@@ -109,7 +109,7 @@ packages/fnos-gateway/src/install-callback-helper/index.ts
 - `cmd/install_callback` 中 `node -e` 计数为 0，大段内联 JavaScript 与重复 JSON 解析函数已移除。
 - 回调只保留环境读取、步骤顺序、`run_install_callback_helper` 调用、`fail_install` 错误退出，以及 helper 缺失与 Node 不可用的阶段检查。
 - 回调不再出现 `runuser`、`chown`、`TRIM_UID`、`TRIM_GROUPNAME` 或 `APP_UID`/`APP_GROUP`；身份由 `config/privilege` 的 `run-as=package` 提供。
-- `bash -n apps/fn-deepseek-harness/cmd/install_callback` 与 `node --check` 均通过；`pnpm --filter @tnnevol/fnos-gateway check` 通过（54 项测试）。
+- `bash -n apps/fn-deepseek-harness/cmd/install_callback` 与 `node --check` 均通过；`pnpm --filter @dicjun/fnos-gateway check` 通过（54 项测试）。
 
 ### P0：CodeBuddy 流式中止稳定性
 
@@ -124,7 +124,7 @@ packages/fnos-gateway/src/install-callback-helper/index.ts
 验证结果：
 
 - `PLAN-FNOS-006-T05-01`、`T05-02`、`T05-03` 均已完成。
-- `pnpm --filter @tnnevol/dsh-codebuddy check`、`pnpm --filter @tnnevol/dsh-codebuddy build`、`pnpm run check -- --all`、`pnpm run build -- --docs` 通过；CodeBuddy 812 项测试通过。
+- `pnpm --filter @dicjun/dsh-codebuddy check`、`pnpm --filter @dicjun/dsh-codebuddy build`、`pnpm run check -- --all`、`pnpm run build -- --docs` 通过；CodeBuddy 812 项测试通过。
 - 端到端中止复现通过：思考中停止会话后流以 `AbortError` 干净结束，DSH 进程继续运行。
 - 真实使用环境已确认「思考中停止会话不再导致 DSH 客户端服务停止」。
 
@@ -178,14 +178,14 @@ packages/fnos-gateway/src/install-callback-helper/index.ts
 本地检查：
 
 ```bash
-pnpm --filter @tnnevol/fnos-gateway typecheck
-pnpm --filter @tnnevol/fnos-gateway run test
-pnpm --filter @tnnevol/fnos-gateway run build:app
+pnpm --filter @dicjun/fnos-gateway typecheck
+pnpm --filter @dicjun/fnos-gateway run test
+pnpm --filter @dicjun/fnos-gateway run build:app
 pnpm run check -- --all
 pnpm run build -- --docs
 pnpm exec fn-apps-cli build -- --fpk --app fn-deepseek-harness --bundle-dsh-plugins
-pnpm --filter @tnnevol/dsh-codebuddy check
-pnpm --filter @tnnevol/dsh-codebuddy build
+pnpm --filter @dicjun/dsh-codebuddy check
+pnpm --filter @dicjun/dsh-codebuddy build
 ```
 
 构建后检查：

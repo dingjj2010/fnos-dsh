@@ -79,7 +79,7 @@ lastVerified: 2026-09-14
 
 - `0.1.5-rc.2` 是本需求的唯一 DSH 运行时基线。catalog、`compatibility.json`、`DSH_VERSION`、native 配置、FPK 安装回调和发布文档不得继续引用旧基线作为当前值。
 - 安装回调必须先检查应用私有全局目录中的 `pnpm@11.7.0` 和 `@deepseek-ai/dsh@0.1.5-rc.2`；可执行文件和实际 CLI 版本均精确匹配时跳过对应安装，仅对缺失、不可执行或版本不匹配的依赖执行安装。
-- 四个运行时插件（`@tnnevol/dsh-codex-auth`、`@tnnevol/dsh-codebuddy`、`@tnnevol/dsh-fnos`、`@tnnevol/dsh-semi-ui-showcase`）的发布版本统一为 `0.1.5-rc.2`，与 DSH 运行时基线保持同一版本号，便于用户和安装器对照；`dshPluginApi.version` 仍单独声明运行时兼容基线，二者分别由 `compatibility.json` 和 `package.json` 承载。此前的 `0.1.5-rc.2.4` 未发布到 registry，改版不涉及撤回或重发。
+- 四个运行时插件（`@dicjun/dsh-codex-auth`、`@dicjun/dsh-codebuddy`、`@dicjun/dsh-fnos`、`@dicjun/dsh-semi-ui-showcase`）的发布版本统一为 `0.1.5-rc.2`，与 DSH 运行时基线保持同一版本号，便于用户和安装器对照；`dshPluginApi.version` 仍单独声明运行时兼容基线，二者分别由 `compatibility.json` 和 `package.json` 承载。此前的 `0.1.5-rc.2.4` 未发布到 registry，改版不涉及撤回或重发。
 - 插件版本号与 DSH 运行时版本号相同不代表插件可以独立于 `compatibility.json` 演进：后续任一插件升级都必须同时更新 `package.json`、`compatibility.json`、发布清单和本节版本约束。
 - 插件 `peerDependencies` 使用统一 catalog，不在各插件中重复硬编码 DSH 版本。
 - FPK 清单中的所有自动安装插件必须填写精确的 `version`，捆绑包的 `package.json` 版本必须与清单一致；禁止使用 `latest`、`next` 或其他浮动 `distTag`。
@@ -119,7 +119,7 @@ lastVerified: 2026-09-14
 - 图标隐藏时对应插件不应为看不见的图标继续后台轮询用量；显隐状态变化后已在跑的刷新任务按现有生命周期正常收尾即可。图标样式、tooltip 和点击展开行为不变，只在「是否挂出」这一层加条件。
 - fnOS iframe 内的会话头部不再使用 DSH 官方「打开应用」按钮。该按钮按编译期常量表 `OPEN_IN_APP_CATALOG` 探测本机应用，其 `zed` 条目在 Linux 上只以「PATH 里存在名为 `zed` 的可执行文件」为判定依据，而 fnOS 基于 Debian 且启用 ZFS，系统自带 `/usr/sbin/zed`（ZFS Event Daemon，`zfs-zed.service`），因此被误判为 Zed 编辑器；同时图标提取要求同名 desktop 条目 `dev.zed.Zed.desktop`，该文件不存在，图标路由返回 404，菜单里因此出现一个只有通用字形、点了也打不开编辑器的条目。catalog 是编译期常量、`Config` 只暴露超时参数、插件没有注册接口，且本仓库纪律不允许提交上游补丁，所以在上游修正前由插件在 fnOS 环境内遮蔽该条目。
 - 遮蔽使用插槽同 `id`、更低 `priority` 的方式（与插件现有 session log 遮蔽同一机制）；不得与官方条目同优先级，否则注册直接失败。只在 `isEmbeddedFnosFrame()` 为真时注册，独立浏览器和桌面端官方入口行为不变。
-- 替代入口沿用 `@tnnevol/dsh-semi-ui` 的组件，外观与官方入口在头部的位置和尺寸保持一致，展开为下拉菜单而非直接触发操作；菜单项由数据驱动，后续追加 fnOS 文件能力条目时不改动锚点、注册方式、遮蔽关系和已交付条目的行为。
+- 替代入口沿用 `@dicjun/dsh-semi-ui` 的组件，外观与官方入口在头部的位置和尺寸保持一致，展开为下拉菜单而非直接触发操作；菜单项由数据驱动，后续追加 fnOS 文件能力条目时不改动锚点、注册方式、遮蔽关系和已交付条目的行为。
 - 目标路径取当前会话的工作目录；工作目录未知或为空时不渲染入口。SDK 未就绪、非 web carrier 或调用失败时给出可见失败提示，不静默吞掉，也不回退到 DSH 原生打开逻辑（NAS 服务容器内没有 `xdg-open`）。不预检插件自己展示的授权目录列表：该列表用于浏览和选择，可能滞后于 fnOS ACL 状态，预检会误拒合法路径，是否允许由 fnOS 判断。
 - fnOS 插件的前端静态资源走插件自己的路由，不内联进客户端 bundle：客户端以 `/fnos-plugins/static/<插件>/<资源>` 引用，网关把 `/fnos-plugins` 列为内置前缀（与 `/api`、`/plugins`、`/open-in-app` 同级）以便浏览器 bridge 自动补上应用前缀，插件在 DSH 侧以同名前缀路由返回包内资源。该前缀是插件自有命名空间，不代理到 DSH 既有路径，也不读取 fnOS 宿主文件系统；资源缺失时按 404 处理。
 
@@ -156,7 +156,7 @@ lastVerified: 2026-09-14
 - `FNOS-004-02-AC-03`：安装回调对 Codex 只执行清单驱动的安装或校准，不写入卸载动作；重复安装/升级不会因为版本已匹配而重复安装，也不会输出删除用户数据的日志。
 - `FNOS-004-02-AC-04`：不内置 Codex 的替代路径被明确否决——registry 上 `latest`/`rc` 的 Codex 版本基线低于 `0.1.5-rc.2`，安装后 DSH Web 以 `settingsNamespace` 缺失报错退出；构建清单不得再声明 Codex 排除规则。
 - `FNOS-004-02-AC-05`：FPK 产物检查、安装脚本回归测试和真实 NAS 升级验证均能证明上述新用户/老用户差异。
-- `FNOS-004-02-AC-06`：FPK 内置插件的浏览器同级 HTTP 路由由网关内置前缀覆盖，用户无需在设置页手工登记：`@tnnevol/dsh-codebuddy` 的 RPC 频道 `/codebuddy` 与 `/api`、`/plugins`、`/open-in-app` 同级，浏览器 bridge 始终为其补上应用前缀；前缀按路径段边界匹配（`/codebuddyx` 不属于该频道）；用户规则不能覆盖或移除内置前缀。
+- `FNOS-004-02-AC-06`：FPK 内置插件的浏览器同级 HTTP 路由由网关内置前缀覆盖，用户无需在设置页手工登记：`@dicjun/dsh-codebuddy` 的 RPC 频道 `/codebuddy` 与 `/api`、`/plugins`、`/open-in-app` 同级，浏览器 bridge 始终为其补上应用前缀；前缀按路径段边界匹配（`/codebuddyx` 不属于该频道）；用户规则不能覆盖或移除内置前缀。
 
 ### FNOS-004-03 验收条件
 

@@ -42,16 +42,16 @@ const targets = [
   {
     value: 'codex',
     label: 'Codex Auth',
-    name: '@tnnevol/dsh-codex-auth',
-    filter: '@tnnevol/dsh-codex-auth...',
+    name: '@dicjun/dsh-codex-auth',
+    filter: '@dicjun/dsh-codex-auth...',
     path: 'plugins/dsh-codex-auth-plugin/package.json',
     slug: 'dsh-codex-auth',
   },
   {
     value: 'fnos',
     label: 'fnOS',
-    name: '@tnnevol/dsh-fnos',
-    filter: '@tnnevol/dsh-fnos...',
+    name: '@dicjun/dsh-fnos',
+    filter: '@dicjun/dsh-fnos...',
     path: 'plugins/dsh-fnos-plugin/package.json',
     slug: 'dsh-fnos',
   },
@@ -62,7 +62,7 @@ describe('plugin version command', () => {
     vi.clearAllMocks()
     mocks.askPlugin.mockResolvedValue(targets)
     mocks.readPackageInfo.mockImplementation(async (path: string) => ({
-      name: path.includes('codex-auth') ? '@tnnevol/dsh-codex-auth' : '@tnnevol/dsh-fnos',
+      name: path.includes('codex-auth') ? '@dicjun/dsh-codex-auth' : '@dicjun/dsh-fnos',
       version: '1.2.3',
     }))
     mocks.versionBump.mockResolvedValue({ currentVersion: '1.2.3', newVersion: '1.2.4' })
@@ -73,8 +73,8 @@ describe('plugin version command', () => {
       ? JSON.stringify({
           version: 1,
           plugins: [
-            { name: '@tnnevol/dsh-codex-auth', version: '1.2.2' },
-            { name: '@tnnevol/dsh-fnos', version: '1.2.2' },
+            { name: '@dicjun/dsh-codex-auth', version: '1.2.2' },
+            { name: '@dicjun/dsh-fnos', version: '1.2.2' },
           ],
         })
       : JSON.stringify({ name: 'plugin', version: '1.2.3' }))
@@ -94,16 +94,16 @@ describe('plugin version command', () => {
 
   it('updates one plugin and synchronizes its matching manifest entry', async () => {
     mocks.askPlugin.mockResolvedValue([targets[1]])
-    mocks.readPackageInfo.mockResolvedValue({ name: '@tnnevol/dsh-fnos', version: '1.2.3' })
+    mocks.readPackageInfo.mockResolvedValue({ name: '@dicjun/dsh-fnos', version: '1.2.3' })
     await runVersion(['plugin', '--yes'])
 
     expect(mocks.writeFile).toHaveBeenCalledTimes(2)
-    expect(mocks.spawnSync).toHaveBeenNthCalledWith(2, 'git', ['commit', '-m', 'chore(plugin): release @tnnevol/dsh-fnos v1.2.4'], expect.any(Object))
+    expect(mocks.spawnSync).toHaveBeenNthCalledWith(2, 'git', ['commit', '-m', 'chore(plugin): release @dicjun/dsh-fnos v1.2.4'], expect.any(Object))
   })
 
   it('accepts a custom version from the interactive release prompt', async () => {
     mocks.askPlugin.mockResolvedValue([targets[1]])
-    mocks.readPackageInfo.mockResolvedValue({ name: '@tnnevol/dsh-fnos', version: '1.2.3' })
+    mocks.readPackageInfo.mockResolvedValue({ name: '@dicjun/dsh-fnos', version: '1.2.3' })
     mocks.select.mockResolvedValue('custom')
     mocks.text.mockResolvedValue('2.0.0-beta.1')
 
@@ -123,8 +123,8 @@ describe('plugin version command', () => {
 
   it('rejects a combined release when plugin versions differ', async () => {
     mocks.readPackageInfo
-      .mockResolvedValueOnce({ name: '@tnnevol/dsh-codex-auth', version: '1.2.3' })
-      .mockResolvedValueOnce({ name: '@tnnevol/dsh-fnos', version: '1.2.2' })
+      .mockResolvedValueOnce({ name: '@dicjun/dsh-codex-auth', version: '1.2.3' })
+      .mockResolvedValueOnce({ name: '@dicjun/dsh-fnos', version: '1.2.2' })
 
     await expect(runVersion(['plugin'])).rejects.toThrow('same current version')
     expect(mocks.versionBump).not.toHaveBeenCalled()
@@ -140,7 +140,7 @@ describe('plugin version command', () => {
   it('aligns the docs package, Harness manifest, and docs example for project releases', async () => {
     mocks.readPackageInfo.mockResolvedValue({ name: 'fn-os-apps', version: '1.2.3' })
     mocks.readFile.mockImplementation(async (path: string) => {
-      if (path.endsWith('docs/package.json')) return JSON.stringify({ name: '@tnnevol/fn-os-apps-docs', version: '1.2.2' })
+      if (path.endsWith('docs/package.json')) return JSON.stringify({ name: '@dicjun/fn-os-apps-docs', version: '1.2.2' })
       if (path.endsWith('apps/fn-deepseek-harness/manifest')) return 'version               = 1.2.2\n'
       if (path.endsWith('docs/development/manifest.md')) return 'version               = 1.2.1\n'
       return JSON.stringify({ name: 'package', version: '1.2.3' })

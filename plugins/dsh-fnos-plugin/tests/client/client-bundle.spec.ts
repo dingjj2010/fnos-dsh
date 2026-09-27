@@ -22,7 +22,7 @@ describe('dsh-fnos client artifact', () => {
     } as unknown as Window
     Object.defineProperty(globalThis, 'window', { configurable: true, value: browserWindow })
     new Function(source)()
-    expect(handoff?.id).toBe('@tnnevol/dsh-fnos')
+    expect(handoff?.id).toBe('@dicjun/dsh-fnos')
     expect(source).toContain('sdk.$on("os/theme"')
     expect(source).toContain('getPlatformConfig')
     expect(source).toContain('const fnosTheme = bridge.getTheme()')

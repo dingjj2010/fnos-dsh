@@ -12,16 +12,16 @@ const targets = [
   {
     value: 'codex',
     label: 'Codex Auth',
-    name: '@tnnevol/dsh-codex-auth',
-    filter: '@tnnevol/dsh-codex-auth...',
+    name: '@dicjun/dsh-codex-auth',
+    filter: '@dicjun/dsh-codex-auth...',
     path: 'plugins/dsh-codex-auth-plugin/package.json',
     slug: 'dsh-codex-auth',
   },
   {
     value: 'fnos',
     label: 'fnOS',
-    name: '@tnnevol/dsh-fnos',
-    filter: '@tnnevol/dsh-fnos...',
+    name: '@dicjun/dsh-fnos',
+    filter: '@dicjun/dsh-fnos...',
     path: 'plugins/dsh-fnos-plugin/package.json',
     slug: 'dsh-fnos',
   },
@@ -51,13 +51,13 @@ describe('local profile plugins', () => {
   })
 
   it('excludes the fnOS plugin, which only serves the fnOS host', () => {
-    expect(localProfilePlugins.map(target => target.name)).toEqual(['@tnnevol/dsh-codex-auth'])
+    expect(localProfilePlugins.map(target => target.name)).toEqual(['@dicjun/dsh-codex-auth'])
   })
 
   it('builds the plugins and links them into the web profile', async () => {
     await ensureLocalProfilePlugins()
 
-    expect(mocks.runTurbo).toHaveBeenCalledWith(['build'], ['@tnnevol/dsh-codex-auth...'])
+    expect(mocks.runTurbo).toHaveBeenCalledWith(['build'], ['@dicjun/dsh-codex-auth...'])
     expect(mocks.runRepoDsh).toHaveBeenCalledTimes(1)
     const [args] = mocks.runRepoDsh.mock.calls[0] ?? []
     expect(args?.[0]).toBe('plugin')
@@ -68,9 +68,9 @@ describe('local profile plugins', () => {
   it('skips a plugin the profile already links as a bundle layer', async () => {
     mocks.readFile.mockResolvedValue(JSON.stringify({
       dependencies: {
-        '@tnnevol/dsh-codex-auth': `link:${codexDirectory}`,
+        '@dicjun/dsh-codex-auth': `link:${codexDirectory}`,
       },
-      dsh: { profile: { bundles: ['@deepseek-ai/dsh-base', '@tnnevol/dsh-codex-auth'] } },
+      dsh: { profile: { bundles: ['@deepseek-ai/dsh-base', '@dicjun/dsh-codex-auth'] } },
     }))
 
     await ensureLocalProfilePlugins()
@@ -82,7 +82,7 @@ describe('local profile plugins', () => {
   it('re-links a plugin that is a dependency but not yet a bundle layer', async () => {
     mocks.readFile.mockResolvedValue(JSON.stringify({
       dependencies: {
-        '@tnnevol/dsh-codex-auth': `link:${codexDirectory}`,
+        '@dicjun/dsh-codex-auth': `link:${codexDirectory}`,
       },
       dsh: { profile: { bundles: ['@deepseek-ai/dsh-base'] } },
     }))

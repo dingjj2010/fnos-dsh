@@ -3,15 +3,15 @@
   "registry": "https://registry.npmjs.org/",
   "plugins": [
     {
-      "name": "@tnnevol/dsh-codebuddy",
-      "version": "0.1.7-rc.2.3"
-    },
-    {
-      "name": "@tnnevol/dsh-codex-auth",
+      "name": "@dicjun/dsh-codebuddy",
       "version": "0.1.7-rc.2"
     },
     {
-      "name": "@tnnevol/dsh-fnos",
+      "name": "@dicjun/dsh-codex-auth",
+      "version": "0.1.7-rc.2"
+    },
+    {
+      "name": "@dicjun/dsh-fnos",
       "version": "0.1.7-rc.2"
     }
   ],

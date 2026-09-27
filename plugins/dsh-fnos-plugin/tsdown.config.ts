@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import type { UserConfig } from 'tsdown'
 import { dshSemiClientDeps } from '../../packages/dsh-semi-ui/tsdown-client-deps.ts'
 
-const PLUGIN_ID = '@tnnevol/dsh-fnos'
+const PLUGIN_ID = '@dicjun/dsh-fnos'
 const CLIENT_EXTERNALS = [
   'react',
   'react/jsx-runtime',

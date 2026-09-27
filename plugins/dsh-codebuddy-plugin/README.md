@@ -1,4 +1,4 @@
-# @tnnevol/dsh-codebuddy
+# @dicjun/dsh-codebuddy
 
 腾讯 CodeBuddy 模型接入插件。在 DSH 里用浏览器 OAuth 登录就能用，不用配 API Key。
 
@@ -7,7 +7,7 @@
 插件发布在 npm，要求 DSH `0.1.7-rc.2`。安装命令：
 
 ```sh
-dsh plugin --profile web add @tnnevol/dsh-codebuddy@0.1.7-rc.2
+dsh plugin --profile web add @dicjun/dsh-codebuddy@0.1.7-rc.2
 ```
 
 装完重启 Web profile 即可。
